@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (C) 2026 Nicolas Vaughan <nivaca@fastmail.com>
+# Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wtk. See the LICENSE file for details.
 #
 # Build with packaging/build-rpm.sh, which makes the source tarball.
@@ -97,28 +97,28 @@ PYTHONPATH=%{buildroot}%{_datadir}/%{name} %{python3} -c \
 %{_datadir}/icons/hicolor/*/apps/py-wtk.*
 
 %changelog
-* Sat Nov 14 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.13-1
+* Sat Nov 14 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.13-1
 - Python 3.15 or later is needed; no longer built for Fedora 44
 
-* Sat Nov 14 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.12-1
+* Sat Nov 14 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.12-1
 - Python 3.13 or later is needed
 
-* Sat Nov 14 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.11-1
+* Sat Nov 14 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.11-1
 - No Flatpak any more; plainer documentation and comments
 
-* Fri Nov 13 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.10-1
+* Fri Nov 13 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.10-1
 - Copying and pasting: an Edit menu in the window, y in the terminal interface
 
-* Fri Nov 13 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.9-1
+* Fri Nov 13 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.9-1
 - The AppImage carries terminal descriptions in the old format, so py-wtk-tui
   starts in it
 
-* Thu Nov 12 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.8-1
+* Thu Nov 12 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.8-1
 - A new icon
 
-* Wed Nov 11 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.7-1
+* Wed Nov 11 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.7-1
 - The window follows the desktop's scaling (Xft.dpi) on hi-res displays
 
-* Wed Nov 11 2026 Nicolas Vaughan <nivaca@fastmail.com> - 1.6-1
+* Wed Nov 11 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.6-1
 - First package: runs on the system's Python and Tk; the commands
   py-wtk, py-wtk-tui and py-wtk-gui, with three menu entries

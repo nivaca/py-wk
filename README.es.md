@@ -17,7 +17,7 @@ conjugaciones), sinónimos, términos derivados y relacionados, descendientes, t
 referencias y lecturas adicionales. Por defecto muestra **todas las lenguas** de la página,
 pero se pueden elegir solo las que interesan; por ejemplo, solo latín, o latín y español.
 
-Lo escribí yo, Nicolás Vaughan (<nivaca@fastmail.com> y <n.vaughan@uniandes.edu.co>), en
+Lo escribí yo, Nicolás Vaughan (<nicolasvaughan@proton.me>), en
 2026.
 
 [Nicolas Vaughan](https://artehum.uniandes.edu.co/profesores/nicolas-vaughan/) es profesor
@@ -412,7 +412,7 @@ La versión está en `pywtk/__init__.py`, y la del RPM en `packaging/py-wtk.spec
 
 ## Licencia
 
-Copyright © 2026 Nicolas Vaughan <nivaca@fastmail.com>
+Copyright © 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 
 Este programa es software libre: puedes redistribuirlo o modificarlo según los términos de
 la Licencia Pública General de GNU publicada por la Free Software Foundation, ya sea la

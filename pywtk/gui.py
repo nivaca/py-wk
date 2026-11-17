@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (C) 2026 Nicolas Vaughan <nivaca@fastmail.com>
+# Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wtk. See the LICENSE file for details.
 """py-wtk-gui — a Tkinter window for browsing the English Wiktionary.
 
@@ -260,7 +260,7 @@ class App:
         h.add_command(label="About", command=lambda: messagebox.showinfo(
             "About py-wtk", f"{NAME} {describe()}\n\nThe English Wiktionary on your desktop.\n"
                             "Content from en.wiktionary.org (CC BY-SA).\n\n"
-                            "By Nicolas Vaughan (nivaca@fastmail.com), Associate Professor\n"
+                            "By Nicolas Vaughan (nicolasvaughan@proton.me), Associate Professor\n"
                             "of Literature at the School of Arts and Humanities of the\n"
                             "Universidad de los Andes, Bogotá, Colombia."))
         m.add_cascade(label="Help", menu=h)

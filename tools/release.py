@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Copyright (C) 2026 Nicolas Vaughan <nivaca@fastmail.com>
+# Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wtk. See the LICENSE file for details.
 """Publishes a release of py-wtk on GitHub (with gh) and on Codeberg (with
 tea): the tag vVERSION (the version of pywtk/__init__.py), with the zip and the
