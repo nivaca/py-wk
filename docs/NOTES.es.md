@@ -1,5 +1,20 @@
 # Notas de las versiones
 
+## 1.14
+
+**El texto sigue la escala de una pantalla de alta resolución.** En una pantalla escalada
+al 200 %, el texto de la ventana podía salir a la mitad de su tamaño mientras la ventana y
+sus controles sí se escalaban: Tk 9, que usa el RPM, deja el tamaño de las fuentes a
+fontconfig, y una regla de la configuración de fontconfig del usuario que fija la
+resolución (a 96 DPI, por ejemplo) se imponía a la escala del escritorio. Ahora la ventana
+le da a fontconfig la resolución del escritorio, después de las reglas del usuario, que se
+mantienen en lo demás. El tamaño de la ventana se guarda ahora en píxeles a 96 DPI y se
+escala al abrirla, como el ancho del índice, así que un tamaño guardado al 100 % no queda
+pequeño al 200 %.
+
+**Una nueva dirección de contacto.** La dirección del autor en los archivos y en el paquete
+es ahora nicolasvaughan@proton.me.
+
 ## 1.13
 
 **Python 3.15 o posterior.** py-wtk necesita ahora Python 3.15 (antes, 3.13). El AppImage

@@ -1,5 +1,19 @@
 # Release notes
 
+## 1.14
+
+**The text follows the scaling of a hi-res display.** On a display scaled to 200%, the
+window's text could come out at half its size while the window and its controls were
+scaled: Tk 9, which the RPM uses, leaves the sizes of the fonts to fontconfig, and a rule
+in the user's fontconfig settings that fixes the DPI (at 96, for instance) won over the
+desktop's scaling. The window now gives fontconfig the desktop's DPI, after the user's own
+rules, which are otherwise kept. The size of the window is now kept in pixels at 96 DPI and
+scaled when it opens, like the width of the contents pane, so a size saved at 100% is not
+too small at 200%.
+
+**A new contact address.** The author's address in the files and the package is now
+nicolasvaughan@proton.me.
+
 ## 1.13
 
 **Python 3.15 or later.** py-wtk now needs Python 3.15 (it was 3.13). The AppImage carries

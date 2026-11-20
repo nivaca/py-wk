@@ -1,4 +1,4 @@
-# py-wtk 1.13: descripción
+# py-wtk 1.14: descripción
 
 *[Read in English](DESCRIPTION.md)*
 
@@ -47,6 +47,8 @@ El programa se probó con Python 3.15, la versión mínima, en Linux. `tools/scr
 ## Plataforma
 
 Funciona en Linux, Windows y macOS, y usa las carpetas habituales de ajustes y de caché de cada sistema. Necesita Python 3.15 o superior; para la ventana hace falta Tkinter, que viene en los instaladores de python.org y que en algunas distribuciones de Linux es un paquete aparte, como `python3-tkinter` o `python3-tk`. El AppImage para Linux no necesita nada más.
+
+En pantallas de alta resolución, la ventana sigue la escala del escritorio (`Xft.dpi`). Desde la 1.14 lo hace también cuando la configuración de fontconfig fija otra resolución para las fuentes, como 96 DPI, que dejaba el texto del RPM a la mitad de su tamaño en una pantalla al 200 %; el tamaño de la ventana se guarda en píxeles a 96 DPI y se escala al abrirla.
 
 Necesita conexión a internet para descargar las páginas, aunque las que ya están en la caché se muestran sin volver a pedirlas.
 

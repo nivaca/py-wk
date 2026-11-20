@@ -8,7 +8,7 @@ py-wtk is a small program for reading the English Wiktionary
 or an expression in any language, and it shows the whole Wiktionary
 entry, cleanly formatted, in the terminal or in a desktop window.
 Nicolas Vaughan made it in 2026.  Earlier versions were called *py-wkt*;
-the current version is 1.13.  Here I explain how it was made, in six
+the current version is 1.14.  Here I explain how it was made, in six
 stages.
 
 It is meant for people who look up words often: students and teachers
@@ -131,7 +131,13 @@ releases: it uses the Python and Tk of the system, and puts the three
 programs in the `PATH` and the applications menu.  The AppImage's Tk is
 older (8.6) and ignores the scaling that the desktop gives to X11
 programs (`Xft.dpi`), so on a scaled hi-res display its window came out
-very small; since 1.7 the window reads that scaling itself.  1.10 also
+very small; since 1.7 the window reads that scaling itself.  The RPM's
+Tk (9) reads it, but it leaves the sizes of the fonts to fontconfig, and
+on one of my laptops, at 200%, a rule in my own fontconfig settings fixed
+its DPI at 96: the window and its controls were scaled, and the text in
+them was not.  Since 1.14 the window starts fontconfig with the usual
+configuration plus one rule that sets the DPI of the desktop, and keeps
+its size in pixels at 96 DPI, like the contents pane.  1.10 also
 came as a Flatpak, for any Linux (its runtime's Python has no Tk, so
 Tcl/Tk and Python's `_tkinter` were built into it), which was dropped
 afterwards.  A small module, `version.py`, is read before the rest of
