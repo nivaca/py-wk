@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import os
 import queue
+import re
 import sys
 import threading
 import tkinter as tk
@@ -26,7 +27,7 @@ from .common import (History, add_lookup_args, cache_summary, clear_cache, link_
                      network_message, no_language_message, open_in_browser, plural,
                      render_languages)
 from .entry import Language, Options, language_sections
-from .gui_fonts import Fonts, scale_factor, scaled
+from .gui_fonts import Fonts, fit_fontconfig, scale_factor, scaled
 from .gui_theme import DARK, LIGHT, Theme
 from .render import Rendered
 from .settings import BY_NAME, Setting, Settings
@@ -137,10 +138,11 @@ class App:
 
         root.title(title())
         geometry = st["gui.window_geometry"] if st["gui.remember_window"] else ""
-        try:
-            root.geometry(geometry or scaled(root, "1150x780"))
-        except tk.TclError:
-            root.geometry(scaled(root, "1150x780"))
+        if not re.fullmatch(r"[0-9]+x[0-9]+", geometry):
+            geometry = "1150x780"
+        #  (kept in pixels at 96 DPI; at most as large as the screen)
+        w, h = (int(n) for n in scaled(root, geometry).split("x"))
+        root.geometry(f"{min(w, root.winfo_screenwidth())}x{min(h, root.winfo_screenheight())}")
         root.minsize(*(int(n) for n in scaled(root, "600x400").split("x")))
         root.protocol("WM_DELETE_WINDOW", self.quit)
         self.build_menu()
@@ -180,7 +182,9 @@ class App:
         if self.settings["gui.remember_window"]:
             g = self.root.winfo_geometry()
             if self.root.state() == "normal" and g.split("+")[0] != "1x1":
-                self.save_setting("gui.window_geometry", g.split("+")[0])
+                factor = scale_factor(self.root)
+                w, h = (round(int(n) / factor) for n in g.split("+")[0].split("x"))
+                self.save_setting("gui.window_geometry", f"{w}x{h}")
         self.root.destroy()
 
     def open_settings(self):
@@ -1328,11 +1332,15 @@ def main(argv=None) -> int:
     ap.add_argument("--size", type=int,
                     help="entry text size this time (default: setting fonts.text_size)")
     args = ap.parse_args(argv)
+    undo = fit_fontconfig()
     try:
         root = tk.Tk(className=WM_CLASS)
+        tkfont.nametofont("TkDefaultFont").metrics("linespace")  # (fontconfig is read)
     except tk.TclError as e:
         print(f"py-wtk-gui: cannot open a window ({e})", file=sys.stderr)
         return 1
+    finally:
+        undo()
     set_icon(root)
     App(root, " ".join(args.word).strip() or None, args.lang, args.dark, args.size)
     root.mainloop()

@@ -201,7 +201,8 @@ SCHEMA: list[Setting] = [
     Setting("gui", "remember_window", "bool", True, "Remember window size",
             "Open the window with the size it had when it was closed."),
     Setting("gui", "window_geometry", "str", "", "Window size",
-            "The size of the window when it was last closed (kept by the program).",
+            "The size of the window when it was last closed, in pixels at 96 DPI "
+            "(kept by the program).",
             hidden=True),
     # ---- fonts --------------------------------------------------------------
     Setting("fonts", "text_family", "str", "", "Entry font",
