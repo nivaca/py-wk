@@ -1,5 +1,15 @@
 # Notas de las versiones
 
+## 1.15
+
+**Las licencias del software que usa.** `docs/LICENCIAS_es.md` (en inglés,
+`docs/LICENSES.md`) enumera el software libre que py-wtk usa o lleva en el AppImage, con
+su función y su licencia, y las herramientas con que se hace py-wtk. Los README remiten a
+ella, y el RPM la incluye entre sus documentos.
+
+**Un registro de cambios.** `CHANGELOG_es.md` (en inglés, `CHANGELOG.md`) recoge los
+cambios de cada versión, con sus fechas.
+
 ## 1.14
 
 **El texto sigue la escala de una pantalla de alta resolución.** En una pantalla escalada

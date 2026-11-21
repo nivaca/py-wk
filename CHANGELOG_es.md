@@ -8,6 +8,14 @@ está también en [Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wtk/)
 La historia de git empieza con la 1.4: las versiones 1.0 a 1.3 se toman de
 las notas de versión de `docs/NOTES.md`, que no dan fechas.
 
+## 1.15 — 2026-11-21
+
+- `docs/LICENCIAS_es.md` y `docs/LICENSES.md` enumeran el software libre
+  que py-wtk usa o lleva en la AppImage, con sus licencias, y las
+  herramientas con que se hace py-wtk; los README remiten a ellas, y el
+  RPM las incluye entre sus documentos.
+- Este registro de cambios, en español y en inglés.
+
 ## 1.14 — 2026-11-20
 
 - **El texto sigue el escalado de una pantalla de alta resolución.** En

@@ -1,5 +1,15 @@
 # Release notes
 
+## 1.15
+
+**The licences of the software it uses.** `docs/LICENSES.md` (in Spanish,
+`docs/LICENCIAS_es.md`) lists the open-source software that py-wtk uses or carries in the
+AppImage, with what it is for and its licence, and the tools that make py-wtk. The READMEs
+point to it, and the RPM has it among its documents.
+
+**A changelog.** `CHANGELOG.md` (in Spanish, `CHANGELOG_es.md`) lists the changes of every
+version, with their dates.
+
 ## 1.14
 
 **The text follows the scaling of a hi-res display.** On a display scaled to 200%, the

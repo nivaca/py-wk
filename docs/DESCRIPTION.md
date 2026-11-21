@@ -8,7 +8,7 @@ py-wtk is a small program for reading the English Wiktionary
 or an expression in any language, and it shows the whole Wiktionary
 entry, cleanly formatted, in the terminal or in a desktop window.
 Nicolas Vaughan made it in 2026.  Earlier versions were called *py-wkt*;
-the current version is 1.14.  Here I explain how it was made, in six
+the current version is 1.15.  Here I explain how it was made, in six
 stages.
 
 It is meant for people who look up words often: students and teachers
@@ -18,7 +18,11 @@ the clutter and the slowness of the web page.  py-wtk is free software,
 under the GNU General Public License, version 3 or later.  The content
 of the entries comes from Wiktionary and its contributors, under the
 CC BY-SA 4.0 licence; py-wtk only displays it, and it is not an official
-project of Wiktionary or of the Wikimedia Foundation.
+project of Wiktionary or of the Wikimedia Foundation.  The program uses
+Python and its standard library (under the Python Software Foundation
+License), with Tcl/Tk and ncurses (under permissive licences); the
+AppImage also carries the libraries of its own Python.  `docs/LICENSES.md`
+lists all of them, and the tools that make py-wtk, with their licences.
 
 Nicolas Vaughan is Associate Professor of Literature at the School of Arts
 and Humanities of the Universidad de los Andes, Bogotá, Colombia.

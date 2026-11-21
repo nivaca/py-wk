@@ -1,10 +1,10 @@
-# py-wtk 1.14: descripción
+# py-wtk 1.15: descripción
 
 *[Read in English](DESCRIPTION.md)*
 
 ## Análisis
 
-py-wtk es un programa pequeño para consultar el Wiktionary en inglés (https://en.wiktionary.org) sin abrir el navegador. Se le da una palabra o una expresión de cualquier lengua y muestra la entrada completa del Wiktionary, con un formato limpio, en la terminal o en una ventana de escritorio. Las versiones anteriores se llamaban *py-wkt*. py-wtk es software libre, bajo la Licencia Pública General de GNU, versión 3 o posterior. El contenido de las entradas procede del Wiktionary y de sus colaboradores, bajo la licencia CC BY-SA 4.0; py-wtk solo lo muestra, y no es un proyecto oficial del Wiktionary ni de la Fundación Wikimedia.
+py-wtk es un programa pequeño para consultar el Wiktionary en inglés (https://en.wiktionary.org) sin abrir el navegador. Se le da una palabra o una expresión de cualquier lengua y muestra la entrada completa del Wiktionary, con un formato limpio, en la terminal o en una ventana de escritorio. Las versiones anteriores se llamaban *py-wkt*. py-wtk es software libre, bajo la Licencia Pública General de GNU, versión 3 o posterior. El contenido de las entradas procede del Wiktionary y de sus colaboradores, bajo la licencia CC BY-SA 4.0; py-wtk solo lo muestra, y no es un proyecto oficial del Wiktionary ni de la Fundación Wikimedia. Usa Python y su biblioteca estándar (bajo la licencia de la Python Software Foundation), con Tcl/Tk y ncurses (bajo licencias permisivas); el AppImage lleva además las bibliotecas de su propio Python. `docs/LICENCIAS_es.md` las enumera todas, con las herramientas con que se hace py-wtk y sus licencias.
 
 Está pensado para quienes consultan palabras a menudo: estudiantes y profesores de lenguas (latín, griego, español, inglés…), traductores, filólogos y, en general, cualquiera que quiera la información del Wiktionary sin el desorden ni la lentitud de la página web. De ahí salieron los requisitos. Lo primero era mostrar la entrada entera, no solo las definiciones: etimología, pronunciación, definiciones con ejemplos y citas fechadas, notas de uso, tablas de flexión (declinaciones y conjugaciones, bien alineadas), sinónimos, términos derivados y relacionados, descendientes, traducciones, referencias y lecturas adicionales. Lo segundo, poder quedarse solo con lo que interesa: unas lenguas, unas secciones o una vista breve con solo las definiciones.
 

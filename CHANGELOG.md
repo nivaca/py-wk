@@ -8,6 +8,14 @@ is also on [Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wtk/).
 The git history begins with 1.4: versions 1.0 to 1.3 are taken from the
 release notes in `docs/NOTES.md`, which give no dates.
 
+## 1.15 — 2026-11-21
+
+- `docs/LICENSES.md` and `docs/LICENCIAS_es.md` list the open-source
+  software that py-wtk uses or carries in the AppImage, with its
+  licences, and the tools that make py-wtk; the READMEs point to them,
+  and the RPM has them among its documents.
+- This changelog, in English and in Spanish.
+
 ## 1.14 — 2026-11-20
 
 - **The text follows the scaling of a hi-res display.** On a display

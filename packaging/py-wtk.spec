@@ -5,7 +5,7 @@
 # Build with packaging/build-rpm.sh, which makes the source tarball.
 
 Name:           py-wtk
-Version:        1.14
+Version:        1.15
 Release:        1%{?dist}
 Summary:        Look up words in the English Wiktionary
 
@@ -87,7 +87,7 @@ PYTHONPATH=%{buildroot}%{_datadir}/%{name} %{python3} -c \
 %license LICENSE
 %doc README.md README.es.md docs/NOTES.md docs/NOTES.es.md
 %doc docs/DESCRIPTION.md docs/DESCRIPCIÓN_es.md
-%doc docs/LICENSES.md docs/LICENCIAS_es.md
+%doc docs/LICENSES.md docs/LICENCIAS_es.md CHANGELOG.md CHANGELOG_es.md
 %{_bindir}/py-wtk
 %{_bindir}/py-wtk-tui
 %{_bindir}/py-wtk-gui
@@ -98,6 +98,10 @@ PYTHONPATH=%{buildroot}%{_datadir}/%{name} %{python3} -c \
 %{_datadir}/icons/hicolor/*/apps/py-wtk.*
 
 %changelog
+* Sat Nov 21 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.15-1
+- A list of the open-source software used, with its licences (docs/LICENSES.md),
+  and a changelog
+
 * Fri Nov 20 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.14-1
 - The window's text follows the scaling of a hi-res display even when fontconfig
   fixes a DPI
