@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """Talking to en.wiktionary.org."""
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ BASE = "https://en.wiktionary.org"
 WIKI = BASE + "/wiki/"
 HTML_URL = BASE + "/api/rest_v1/page/html/{}"
 SEARCH_URL = BASE + "/w/api.php"
-USER_AGENT = f"py-wtk/{__version__} (command-line Wiktionary client; Python urllib)"
+USER_AGENT = f"py-wk/{__version__} (command-line Wiktionary client; Python urllib)"
 TIMEOUT = 20
 
 # Errors callers should treat as "could not reach Wiktionary".

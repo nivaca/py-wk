@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 #
-# Builds py-wtk's RPM (and source RPM) from this checkout, into
+# Builds py-wk's RPM (and source RPM) from this checkout, into
 # build/rpm/ — not ~/rpmbuild, so nothing outside the repo is touched.
 #
 #   packaging/build-rpm.sh [--sign[=KEY]]
@@ -11,10 +11,10 @@
 # --sign signs both RPMs with OpenPGP, so dnf can check where they came
 # from, with the project's signing key, SIGNING_KEY below (the same on all
 # the author's machines; a copy of its public key is in
-# packaging/RPM-GPG-KEY-py-wtk). --sign=KEY, or $SIGNING_KEY, names
+# packaging/RPM-GPG-KEY-py-wk). --sign=KEY, or $SIGNING_KEY, names
 # another key for an exceptional build. The public key is exported next to them as
-# build/rpm/RPM-GPG-KEY-py-wtk, for people to import before installing
-# (sudo rpm --import RPM-GPG-KEY-py-wtk). gpg asks for the key's
+# build/rpm/RPM-GPG-KEY-py-wk, for people to import before installing
+# (sudo rpm --import RPM-GPG-KEY-py-wk). gpg asks for the key's
 # passphrase as usual. Needs rpm-sign; RPMSIGN names another rpmsign.
 #
 # The source tarball is made from the files git knows about, committed or
@@ -31,7 +31,7 @@ set -euo pipefail
 DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
 # The project's signing key (Nicolas Vaughan, RPM signing, ed25519, 2026)
 SIGNING_KEY="${SIGNING_KEY:-81870643CA221AF90C30554EBE6832CD35994948}"
-SPEC="$DIR/packaging/py-wtk.spec"
+SPEC="$DIR/packaging/py-wk.spec"
 TOP="$DIR/build/rpm"
 RPMSIGN="${RPMSIGN:-rpmsign}"
 
@@ -78,7 +78,7 @@ if [ "$SIGN" = 1 ]; then
 fi
 
 VERSION="$(rpmspec -q --srpm --qf '%{version}\n' "$SPEC")"
-NAME="py-wtk-$VERSION"
+NAME="py-wk-$VERSION"
 
 if [ -n "$(git -C "$DIR" status --porcelain)" ]; then
     echo "note: the tree has uncommitted changes; they go into this build."
@@ -86,7 +86,7 @@ fi
 
 rm -rf "$TOP"
 mkdir -p "$TOP"/{SOURCES,SPECS,BUILD,RPMS,SRPMS}
-# Tracked and new files, as they are on disk, under py-wtk-VERSION/,
+# Tracked and new files, as they are on disk, under py-wk-VERSION/,
 # and COMMIT.
 LIST="$TOP/files"
 (cd "$DIR" && git ls-files -z --cached --others --exclude-standard |
@@ -115,14 +115,14 @@ if [ "$SIGN" = 1 ]; then
     # rpm looks for gpg's keys in ~/.gnupg unless told otherwise.
     "$RPMSIGN" --define "_gpg_name $FPR" \
         ${GNUPGHOME:+--define "_gpg_path $GNUPGHOME"} --addsign "${RPMS[@]}"
-    gpg --batch --armor --export "$FPR" > "$TOP/RPM-GPG-KEY-py-wtk"
+    gpg --batch --armor --export "$FPR" > "$TOP/RPM-GPG-KEY-py-wk"
     # The key published with the RPMs must be the project's, the one in
     # packaging/ (unless another was asked for).
-    if [ "$KEY" = "$SIGNING_KEY" ] && [ -f "$DIR/packaging/RPM-GPG-KEY-py-wtk" ]; then
-        shipped="$(gpg --batch --with-colons --show-keys "$DIR/packaging/RPM-GPG-KEY-py-wtk" |
+    if [ "$KEY" = "$SIGNING_KEY" ] && [ -f "$DIR/packaging/RPM-GPG-KEY-py-wk" ]; then
+        shipped="$(gpg --batch --with-colons --show-keys "$DIR/packaging/RPM-GPG-KEY-py-wk" |
             awk -F: '$1 == "fpr" { print $10; exit }')"
         [ "$shipped" = "$FPR" ] ||
-            die "packaging/RPM-GPG-KEY-py-wtk is not the key that signed ($FPR)"
+            die "packaging/RPM-GPG-KEY-py-wk is not the key that signed ($FPR)"
     fi
     # Prove it the way a user's dnf will: in a keyring of its own, holding
     # only the exported key, every package must verify. That checks the
@@ -132,7 +132,7 @@ if [ "$SIGN" = 1 ]; then
     trap 'rm -rf "$keyring"' EXIT
     check=(--dbpath "$keyring" --define "_keyring fs"
            --define "_keyringpath $keyring/pubkeys/")
-    rpmkeys "${check[@]}" --import "$TOP/RPM-GPG-KEY-py-wtk" ||
+    rpmkeys "${check[@]}" --import "$TOP/RPM-GPG-KEY-py-wk" ||
         die "the exported key could not be read back"
     for rpm in "${RPMS[@]}"; do
         rpmkeys "${check[@]}" -K "$rpm" >/dev/null ||
@@ -144,7 +144,7 @@ fi
 # the AppImage, in place of the older ones (it stays in build/rpm/ as well,
 # where the release tools look for it).
 mkdir -p "$DIR/dist"
-find "$DIR/dist" -maxdepth 1 -name 'py-wtk-*.rpm' ! -name '*.src.rpm' -delete
+find "$DIR/dist" -maxdepth 1 -name 'py-wk-*.rpm' ! -name '*.src.rpm' -delete
 for rpm in "${RPMS[@]}"; do
     case "$rpm" in
         *.src.rpm) ;;
@@ -157,7 +157,7 @@ echo "Built:"
 for rpm in "${RPMS[@]}"; do
     echo "  $rpm"
 done
-echo "Copied to dist/: $(cd "$DIR/dist" && ls py-wtk-*.rpm 2>/dev/null | grep -v '\.src\.rpm$' | tr '\n' ' ')"
+echo "Copied to dist/: $(cd "$DIR/dist" && ls py-wk-*.rpm 2>/dev/null | grep -v '\.src\.rpm$' | tr '\n' ' ')"
 if [ "$SIGN" = 1 ]; then
-    echo "Signed by $FPR; public key: $TOP/RPM-GPG-KEY-py-wtk"
+    echo "Signed by $FPR; public key: $TOP/RPM-GPG-KEY-py-wk"
 fi

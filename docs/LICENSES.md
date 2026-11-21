@@ -1,7 +1,7 @@
-Open-source software in py-wtk
+Open-source software in py-wk
 ==============================
 
-py-wtk is free software, under the GNU General Public License, version 3
+py-wk is free software, under the GNU General Public License, version 3
 or later (the file `LICENSE`).  Its own code uses only the standard
 library of Python, so what other software comes with it depends on how it
 is installed: the zip and the RPM bring nothing but the program, and the
@@ -10,13 +10,13 @@ what it is used for, and its licence (with its SPDX identifier).
 
 The text of the entries is not software: it comes from the English
 Wiktionary and its authors, under the licence CC BY-SA 4.0
-(<https://creativecommons.org/licenses/by-sa/4.0/>).  py-wtk only shows it.
+(<https://creativecommons.org/licenses/by-sa/4.0/>).  py-wk only shows it.
 
 
 What the program uses
 ---------------------
 
-These are needed by every form of py-wtk.  With the zip they are the
+These are needed by every form of py-wk.  With the zip they are the
 user's own; with the RPM, Fedora's; with the AppImage, those inside it.
 
 | Software | Used for | Licence |
@@ -41,16 +41,16 @@ the AppImage as they come:
 | Xft, Xrender | | Tk, to draw the text | `HPND-sell-variant` |
 | ncurses (`ncursesw`, `panelw`, `tinfo`) | 5 | `curses` (the terminal interface) | `MIT-open-group` |
 | OpenSSL | 3 | `ssl` (HTTPS to Wiktionary) | `Apache-2.0` |
-| GNU Readline | 6.2 | `readline` (line editing in `py-wtk -i`) | `GPL-3.0-or-later` |
-| GNU dbm | 1.10 | `dbm` (not used by py-wtk) | `GPL-3.0-or-later` |
-| SQLite | 3.54.1 | `sqlite3` (not used by py-wtk) | public domain (`blessing`) |
-| bzip2 | 1.0.6 | `bz2` (not used by py-wtk) | `bzip2-1.0.6` |
-| XZ Utils (liblzma) | 5.2.2 | `lzma` (not used by py-wtk) | public domain |
-| Zstandard | 1.5.7 | `compression.zstd` (not used by py-wtk) | `BSD-3-Clause OR GPL-2.0-only` |
+| GNU Readline | 6.2 | `readline` (line editing in `py-wk -i`) | `GPL-3.0-or-later` |
+| GNU dbm | 1.10 | `dbm` (not used by py-wk) | `GPL-3.0-or-later` |
+| SQLite | 3.54.1 | `sqlite3` (not used by py-wk) | public domain (`blessing`) |
+| bzip2 | 1.0.6 | `bz2` (not used by py-wk) | `bzip2-1.0.6` |
+| XZ Utils (liblzma) | 5.2.2 | `lzma` (not used by py-wk) | public domain |
+| Zstandard | 1.5.7 | `compression.zstd` (not used by py-wk) | `BSD-3-Clause OR GPL-2.0-only` |
 | libffi | | `ctypes` (to read the X resources) | `MIT` |
-| mpdecimal | 4.0.1 | `decimal` (not used by py-wtk) | `BSD-2-Clause` |
+| mpdecimal | 4.0.1 | `decimal` (not used by py-wk) | `BSD-2-Clause` |
 
-The same build has a few Python packages, of which py-wtk uses only
+The same build has a few Python packages, of which py-wk uses only
 certifi:
 
 | Package | Used for | Licence |
@@ -84,7 +84,7 @@ which it installs as dependencies:
 Tools used to make it
 ---------------------
 
-These are used to build, test and publish py-wtk.  None of them goes into
+These are used to build, test and publish py-wk.  None of them goes into
 what is distributed.
 
 | Tool | Used for | Licence |

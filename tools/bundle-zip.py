@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """Makes a zip of the program, to distribute it: python3 tools/bundle-zip.py
 
-The zip is dist/py-wtk-v.VERSION.zip (the version of pywtk/__init__.py;
+The zip is dist/py-wk-v.VERSION.zip (the version of pywk/__init__.py;
 dist is made in the program's folder if need be, and --output gives another
 folder), with the program in a folder of the same name.  It has the three
-launchers, the pywtk package, the icons, the documents and the licence, but
+launchers, the pywk package, the icons, the documents and the licence, but
 no hidden files or folders (.git ...), none of what is made while the
 program runs or is edited (__pycache__, .bak and .tmp files ...), and none
 of what is in its folder but not part of it (the bundles in dist/, and
@@ -22,7 +22,7 @@ import sys
 #  (the program's folder, above tools/)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from pywtk.version import check_python  # noqa: E402
+from pywk.version import check_python  # noqa: E402
 
 check_python()          # (before the modules that need it)
 
@@ -30,7 +30,7 @@ import argparse  # noqa: E402
 import fnmatch  # noqa: E402
 import zipfile  # noqa: E402
 
-from pywtk.version import COMMIT_FILE, NAME, VERSION, commit  # noqa: E402
+from pywk.version import COMMIT_FILE, NAME, VERSION, commit  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # (above tools/)
 #  Where the zip goes, unless --output says otherwise
@@ -47,7 +47,7 @@ NOT_PART = ("dist", "tools", "build")
 
 
 def name() -> str:
-    """The name of the zip, without .zip: py-wtk-v.1.0."""
+    """The name of the zip, without .zip: py-wk-v.1.0."""
     return f"{NAME}-v.{VERSION}"
 
 

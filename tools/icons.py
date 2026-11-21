@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""Makes all the icons afresh from icons/py-wtk.svg:
+# This file is part of py-wk. See the LICENSE file for details.
+"""Makes all the icons afresh from icons/py-wk.svg:
 
     python3 tools/icons.py [--svg FILE] [-o FOLDER] [--dry-run]
 
 In FOLDER (icons/ by default) it writes:
 
-* png/py-wtk-N.png, for each N in PNG_SIZES;
-* linux/hicolor/NxN/apps/py-wtk.png, for each N in HICOLOR_SIZES, and
-  linux/hicolor/scalable/apps/py-wtk.svg (a copy of the SVG);
-* mac/py-wtk.iconset/icon_NxN[@2x].png and mac/py-wtk.icns;
-* windows/py-wtk.ico.
+* png/py-wk-N.png, for each N in PNG_SIZES;
+* linux/hicolor/NxN/apps/py-wk.png, for each N in HICOLOR_SIZES, and
+  linux/hicolor/scalable/apps/py-wk.svg (a copy of the SVG);
+* mac/py-wk.iconset/icon_NxN[@2x].png and mac/py-wk.icns;
+* windows/py-wk.ico.
 
 Each size is drawn by Inkscape from the SVG (never scaled down from a
 bigger PNG), all of them in a single run of Inkscape.  The .icns and the
@@ -34,7 +34,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-NAME = "py-wtk"
+NAME = "py-wk"
 FLATPAK_ID = "org.inkscape.Inkscape"
 PNG_SIZES = [16, 20, 22, 24, 32, 40, 48, 64, 96, 128, 256, 512, 1024]
 HICOLOR_SIZES = [16, 22, 24, 32, 48, 64, 96, 128, 256, 512]

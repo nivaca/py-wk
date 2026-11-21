@@ -1,4 +1,4 @@
-#+TITLE: Publishing py-wtk RPMs on Fedora COPR
+#+TITLE: Publishing py-wk RPMs on Fedora COPR
 #+AUTHOR: nivaca
 #+STARTUP: overview
 
@@ -6,8 +6,8 @@
 COPR (https://copr.fedorainfracloud.org) builds RPMs from a source RPM
 (SRPM) or straight from git, signs them with its own key, and publishes
 them as a dnf repository.
-- Project URL :: https://copr.fedorainfracloud.org/coprs/nivaca/py-wtk/
-- Users install with :: =sudo dnf copr enable nivaca/py-wtk && sudo dnf install py-wtk=
+- Project URL :: https://copr.fedorainfracloud.org/coprs/nivaca/py-wk/
+- Users install with :: =sudo dnf copr enable nivaca/py-wk && sudo dnf install py-wk=
 
 There are two ways to submit builds:
 1. *Upload an SRPM* built locally with =copr-cli=. This is the simplest way
@@ -47,11 +47,11 @@ List the chroots (build targets) on offer, then create the project:
 #+begin_src sh
 copr-cli list-chroots | grep -E '^fedora-(4[5-9]|rawhide)-x86_64'
 
-copr-cli create py-wtk \
+copr-cli create py-wk \
   --chroot fedora-45-x86_64 \
   --chroot fedora-rawhide-x86_64 \
   --description "Look up words in the English Wiktionary: a command line, a terminal interface and a window." \
-  --instructions "sudo dnf copr enable nivaca/py-wtk && sudo dnf install py-wtk" \
+  --instructions "sudo dnf copr enable nivaca/py-wk && sudo dnf install py-wk" \
   --repo-priority 99
 #+end_src
 - The package is =noarch= (pure Python), so one architecture per Fedora
@@ -66,7 +66,7 @@ All RPMs are signed with one key, the same on all the author's machines:
 =81870643CA221AF90C30554EBE6832CD35994948= (Nicolas Vaughan, RPM signing, ed25519, 2026).
 =build-rpm.sh= pins it (=SIGNING_KEY=); =--sign= uses only that key and stops
 if it isn't in this machine's keyring, and =release.py= checks for it
-first. A copy of the public key is in =packaging/RPM-GPG-KEY-py-wtk=; the
+first. A copy of the public key is in =packaging/RPM-GPG-KEY-py-wk=; the
 one exported next to the RPMs must match it. To set up another machine
 (copy key.asc directly, by scp or USB, not through a synced folder):
 #+begin_src sh
@@ -87,33 +87,33 @@ gpg --edit-key 81870643CA221AF90C30554EBE6832CD35994948 trust                   
    with its own key too.
    #+begin_src sh
    packaging/build-rpm.sh --sign
-   ls build/rpm/SRPMS/       # py-wtk-1.6-1.fc45.src.rpm
+   ls build/rpm/SRPMS/       # py-wk-1.6-1.fc45.src.rpm
    #+end_src
 3. Submit it:
    #+begin_src sh
-   copr-cli build py-wtk build/rpm/SRPMS/py-wtk-*.src.rpm
+   copr-cli build py-wk build/rpm/SRPMS/py-wk-*.src.rpm
    #+end_src
    - This waits and shows progress. Add =--nowait= to return at once.
    - Add =-r fedora-45-x86_64= (repeatable) to build only some chroots.
 4. Check results:
    #+begin_src sh
-   copr-cli list-builds nivaca/py-wtk
+   copr-cli list-builds nivaca/py-wk
    copr-cli status <BUILD_ID>
    copr-cli watch-build <BUILD_ID>
    #+end_src
    Build logs (=builder-live.log=) are linked from the build's web page.
 5. Test as a user would:
    #+begin_src sh
-   sudo dnf copr enable nivaca/py-wtk
-   sudo dnf install py-wtk      # or: sudo dnf upgrade py-wtk
+   sudo dnf copr enable nivaca/py-wk
+   sudo dnf install py-wk      # or: sudo dnf upgrade py-wk
    #+end_src
 
 ** Updating to a new version
-1. Bump the version in =pywtk/__init__.py= as usual (and the docs), then
-   the spec's, with a changelog entry, in =packaging/py-wtk.spec=:
+1. Bump the version in =pywk/__init__.py= as usual (and the docs), then
+   the spec's, with a changelog entry, in =packaging/py-wk.spec=:
    #+begin_src sh
    rpmdev-bumpspec -n 1.7 -c "Short description of the change" \
-       -u "Nicolas Vaughan <nicolasvaughan@proton.me>" packaging/py-wtk.spec
+       -u "Nicolas Vaughan <nicolasvaughan@proton.me>" packaging/py-wk.spec
    #+end_src
    =tools/release.py --rpm= stops while the two versions differ.
    - =-n VERSION= sets =Version:= and resets =Release:= to 1.
@@ -122,11 +122,11 @@ gpg --edit-key 81870643CA221AF90C30554EBE6832CD35994948 trust                   
 2. Commit, then publish with =tools/release.py --rpm=. Besides the
    tag and the releases, it builds the signed RPM (gpg asks for the
    passphrase), attaches it and its key to both releases, and sends the
-   SRPM to COPR (=copr-cli build py-wtk build/rpm/SRPMS/py-wtk-X.Y-*.src.rpm=).
+   SRPM to COPR (=copr-cli build py-wk build/rpm/SRPMS/py-wk-X.Y-*.src.rpm=).
    =--no-copr= leaves that last step out; to do it by hand:
    #+begin_src sh
    packaging/build-rpm.sh --sign
-   copr-cli build py-wtk build/rpm/SRPMS/py-wtk-1.7-*.src.rpm
+   copr-cli build py-wk build/rpm/SRPMS/py-wk-1.7-*.src.rpm
    #+end_src
 3. Users get it with =sudo dnf upgrade=. COPR regenerates the repo
    metadata after each build. dnf can take a while to notice, because of
@@ -136,7 +136,7 @@ gpg --edit-key 81870643CA221AF90C30554EBE6832CD35994948 trust                   
 Otherwise dnf will not see it as an update.
 
 * Workflow B: build from git (optional)
-COPR clones github.com/nivaca/py-wtk and makes the SRPM itself.
+COPR clones github.com/nivaca/py-wk and makes the SRPM itself.
 =Source0= is a local tarball, so use the =make_srpm= method and a
 =.copr/Makefile= in the repo. (Untested sketch: do the first SCM build by
 hand before turning on the webhook.)
@@ -148,8 +148,8 @@ srpm:
 	git config --global --add safe.directory "$$PWD"
 	git rev-parse HEAD > COMMIT
 	v=$$(rpmspec -q --srpm --qf '%{version}' $(spec)); \
-	git archive --prefix=py-wtk-$$v/ --add-file=COMMIT \
-	    -o $(outdir)/py-wtk-$$v.tar.gz HEAD; \
+	git archive --prefix=py-wk-$$v/ --add-file=COMMIT \
+	    -o $(outdir)/py-wk-$$v.tar.gz HEAD; \
 	rpmbuild -bs --define "_sourcedir $(outdir)" \
 	    --define "_srcrpmdir $(outdir)" $(spec)
 #+end_src
@@ -158,21 +158,21 @@ too: the commit that "About" and =--version= show.)
 
 Register the package:
 #+begin_src sh
-copr-cli add-package-scm py-wtk \
-  --name py-wtk \
-  --clone-url https://github.com/nivaca/py-wtk.git \
+copr-cli add-package-scm py-wk \
+  --name py-wk \
+  --clone-url https://github.com/nivaca/py-wk.git \
   --commit main \
-  --spec packaging/py-wtk.spec \
+  --spec packaging/py-wk.spec \
   --method make_srpm \
   --webhook-rebuild on
 #+end_src
 - Manual build from the latest commit:
-  =copr-cli build-package py-wtk --name py-wtk=
+  =copr-cli build-package py-wk --name py-wk=
 - Automatic builds: open Project → Settings → Integrations, copy the
   GitHub webhook URL, and add it in GitHub under Repo → Settings →
   Webhooks (content type =application/json=, "Just the push event", or
   pick "Branch or tag creation" to build only on tags).
-- Change settings later with =copr-cli edit-package-scm py-wtk --name py-wtk ...=
+- Change settings later with =copr-cli edit-package-scm py-wk --name py-wk ...=
 - *Caution:* every push to =main= then makes a build. If =Release:= is
   not bumped, it has the same EVR as the last one and users do not get
   it. Either bump the spec with every pushed change, or point =--commit=
@@ -182,7 +182,7 @@ copr-cli add-package-scm py-wtk \
 ** New Fedora release / EOL
 Add new chroots when Fedora branches, and drop EOL ones:
 #+begin_src sh
-copr-cli modify py-wtk \
+copr-cli modify py-wk \
   --chroot fedora-45-x86_64 --chroot fedora-46-x86_64 \
   --chroot fedora-rawhide-x86_64
 #+end_src
@@ -193,22 +193,31 @@ from a previous chroot.
 
 ** Housekeeping
 #+begin_src sh
-copr-cli list-builds nivaca/py-wtk
+copr-cli list-builds nivaca/py-wk
 copr-cli cancel <BUILD_ID>
 copr-cli delete-build <BUILD_ID>
-copr-cli get nivaca/py-wtk          # project settings
+copr-cli get nivaca/py-wk          # project settings
 #+end_src
 - Renew the API token every 180 days ([[*3. API token]]).
 - Failed builds: read =builder-live.log= on the build page, then fix and
   rebuild. To reproduce locally with the same setup:
   #+begin_src sh
   sudo dnf install mock && sudo usermod -aG mock $USER   # re-login
-  mock -r fedora-45-x86_64 build/rpm/SRPMS/py-wtk-*.src.rpm
+  mock -r fedora-45-x86_64 build/rpm/SRPMS/py-wk-*.src.rpm
   #+end_src
 
 * Quick reference: release checklist
-- [ ] Bump =pywtk/__init__.py= (and the docs, NOTES)
-- [ ] =rpmdev-bumpspec -n X.Y -c "..." packaging/py-wtk.spec=
+- [ ] Bump =pywk/__init__.py= (and the docs, NOTES)
+- [ ] =rpmdev-bumpspec -n X.Y -c "..." packaging/py-wk.spec=
 - [ ] Commit; =tools/release.py --rpm --notes-file F= (tags vX.Y,
       publishes on both forges with the RPM, and builds it on COPR)
-- [ ] =sudo dnf upgrade --refresh py-wtk= and smoke-test (=py-wtk -l la rosa=)
+- [ ] =sudo dnf upgrade --refresh py-wk= and smoke-test (=py-wk -l la rosa=)
+
+* The rename (1.16)
+Up to 1.15 the program was py-wtk, in the Copr project =nivaca/py-wtk=.
+Copr cannot rename a project, so 1.16 started =nivaca/py-wk= (created as
+in [[*4. Create the project]]). The spec says =Obsoletes: py-wtk < 1.16=
+and =Provides: py-wtk=, so once a user enables the new project, =dnf=
+replaces py-wtk with py-wk. The old project is kept, with its builds, for
+whoever has not moved yet; to make that move automatic, the 1.16 SRPM can
+also be built once there (=copr-cli build py-wtk <srpm>=).

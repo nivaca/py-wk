@@ -1,24 +1,24 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""py-wtk — look up words in the English Wiktionary from the command line.
+# This file is part of py-wk. See the LICENSE file for details.
+"""py-wk — look up words in the English Wiktionary from the command line.
 
 Shows the full entry: etymology, pronunciation, definitions, usage examples,
 quotations, inflection tables, synonyms, derived/related terms, descendants,
 translations, references, and so on.
 
 Examples:
-    py-wtk house                 # full entry for "house" (all languages)
-    py-wtk rosa -l la            # Latin entry only (code or name: -l Latin)
-    py-wtk rosa -l en            # English only
-    py-wtk rosa -b               # brief: definitions only
-    py-wtk house -o etymology,pronunciation
-    py-wtk house -x translations,quotations
-    py-wtk -s recieve            # search for matching page titles
-    py-wtk -i                    # ask for one word after another
-    py-wtk house --json          # structured JSON output
-    py-wtk --settings            # list the settings
-    py-wtk --configure           # change the settings interactively
+    py-wk house                 # full entry for "house" (all languages)
+    py-wk rosa -l la            # Latin entry only (code or name: -l Latin)
+    py-wk rosa -l en            # English only
+    py-wk rosa -b               # brief: definitions only
+    py-wk house -o etymology,pronunciation
+    py-wk house -x translations,quotations
+    py-wk -s recieve            # search for matching page titles
+    py-wk -i                    # ask for one word after another
+    py-wk house --json          # structured JSON output
+    py-wk --settings            # list the settings
+    py-wk --configure           # change the settings interactively
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ from .settings import SECTION_TITLES, Settings, cache_dir
 from .settings import lookup as find_setting
 from .version import NAME, VERSION, describe, title
 
-PROG = "py-wtk"
+PROG = "py-wk"
 
 
 def term_width(max_width: int) -> int:

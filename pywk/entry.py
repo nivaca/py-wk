@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """Page structure: language sections, section names, filters and options."""
 
 from __future__ import annotations

@@ -7,7 +7,7 @@ __pycache__/
 .DS_Store
 # The bundles (tools/bundle-zip.py, tools/bundle-appimage.py)
 dist/
-# Written into the bundles only (pywtk/version.py reads it)
+# Written into the bundles only (pywk/version.py reads it)
 /COMMIT
 # The RPM (packaging/build-rpm.sh)
 /build/

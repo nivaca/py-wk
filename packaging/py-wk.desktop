@@ -1,12 +1,14 @@
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=py-wtk (TUI)
+Name=py-wk (GUI)
 Comment=Look up words in the English Wiktionary
 Comment[es]=Buscar palabras en el Wiktionary inglés
 Keywords=dictionary;Wiktionary;English;
 Keywords[es]=diccionario;Wiktionary;inglés;
 Categories=Office;Dictionary;
-Icon=py-wtk
-Exec=py-wtk-tui
-Terminal=true
+Icon=py-wk
+Exec=py-wk-gui
+Terminal=false
+StartupNotify=true
+StartupWMClass=py-wk

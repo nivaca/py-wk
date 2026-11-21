@@ -1,15 +1,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""The settings of py-wtk, shared by the three programs.
+# This file is part of py-wk. See the LICENSE file for details.
+"""The settings of py-wk, shared by the three programs.
 
 They are kept in the configuration file (see config.py), one section per
 part of the program:
 
     [general]      what is shown, searching, the disk cache (all programs)
-    [cli]          py-wtk
-    [tui]          py-wtk-tui
-    [gui]          py-wtk-gui
+    [cli]          py-wk
+    [tui]          py-wk-tui
+    [gui]          py-wk-gui
     [fonts]        the fonts of the window
     [appearance]   dark_mode
 
@@ -22,8 +22,9 @@ file.  Values that are not valid are reported (Settings.problems) and the
 usual ones used instead.
 
 The settings of earlier versions are moved here once, if there is no
-config.toml yet: the settings.ini of earlier versions, and the folder of the
-versions named py-wkt (~/.config/py-wkt ...); the old file is renamed *.old.
+config.toml yet: the settings.ini of earlier versions, and the folders of the
+versions named py-wtk and py-wkt (~/.config/py-wtk, ~/.config/py-wkt ...);
+the old file is renamed *.old.
 """
 
 from __future__ import annotations
@@ -116,18 +117,18 @@ class Setting:
 
 SECTION_TITLES = {
     "general": "General (all programs)",
-    "cli": "Command line (py-wtk)",
-    "tui": "Terminal interface (py-wtk-tui)",
-    "gui": "Window (py-wtk-gui)",
-    "fonts": "Fonts (py-wtk-gui)",
-    "appearance": "Appearance (py-wtk-gui)",
+    "cli": "Command line (py-wk)",
+    "tui": "Terminal interface (py-wk-tui)",
+    "gui": "Window (py-wk-gui)",
+    "fonts": "Fonts (py-wk-gui)",
+    "appearance": "Appearance (py-wk-gui)",
 }
 
 SECTION_INTRO = {
     "general": "What all three programs show, and how they search and keep pages.",
-    "cli": "The command-line program, py-wtk.",
-    "tui": "The terminal interface, py-wtk-tui.",
-    "gui": "The window, py-wtk-gui.",
+    "cli": "The command-line program, py-wk.",
+    "tui": "The terminal interface, py-wk-tui.",
+    "gui": "The window, py-wk-gui.",
     "fonts": "The fonts of the window (also changed with Ctrl and + or -, and Ctrl and 0 "
              "for the usual ones). Sizes are in points.",
     "appearance": "The look of the window: dark_mode = true for dark, false for light "
@@ -248,7 +249,7 @@ def cache_dir() -> Path:
 # ---------------------------------------------------------------------------
 #  The file
 
-HEADER = ("The settings of py-wtk. Each setting can be left out (or the whole file "
+HEADER = ("The settings of py-wk. Each setting can be left out (or the whole file "
           "deleted) to use its usual value; those left out are shown commented, with "
           "their usual value. The programs rewrite this file when settings are saved: "
           "the values are kept, but not comments of your own.")
@@ -278,7 +279,7 @@ def render(data: dict[str, dict]) -> str:
         unknown = [k for k in values if f"{name}.{k}" not in BY_NAME]
         if unknown:
             out.append("")
-            out.append("# Not settings of this version of py-wtk (ignored):")
+            out.append("# Not settings of this version of py-wk (ignored):")
             out += [f"{config.toml_key(k)} = {config.toml_value(values[k])}" for k in unknown]
         out.append("")
     return "\n".join(out)
@@ -322,20 +323,24 @@ class Settings:
 
     def _move_old(self):
         """The settings of earlier versions, into config.toml (once, when
-        there is none yet): the settings.ini of earlier versions, here or in the
-        folder of the versions named py-wkt, or the config.toml of that
-        folder.  The old file is then renamed *.old."""
+        there is none yet): the settings.ini of earlier versions, here, or
+        else the config.toml (or settings.ini) of the folder of the versions
+        named py-wtk or, failing that, py-wkt.  The old file is then renamed
+        *.old."""
         if self.path.exists():
             return
         here = Path(config.config_dir())
-        old = config.old_config_dir()
-        old = Path(old) if old else None
         if (here / "settings.ini").is_file():
             self._import_ini(here / "settings.ini")
-        elif old and (old / config.CONFIG_FILE).is_file():
-            self._import_toml(old / config.CONFIG_FILE)
-        elif old and (old / "settings.ini").is_file():
-            self._import_ini(old / "settings.ini")
+            return
+        # La carpeta más reciente con ajustes gana (py-wtk antes que py-wkt)
+        for old in map(Path, config.old_config_dirs()):
+            if (old / config.CONFIG_FILE).is_file():
+                self._import_toml(old / config.CONFIG_FILE)
+                return
+            if (old / "settings.ini").is_file():
+                self._import_ini(old / "settings.ini")
+                return
 
     def _import_toml(self, path: Path):
         try:

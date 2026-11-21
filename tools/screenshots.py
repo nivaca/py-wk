@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """Takes the screenshots of the README: the three programs (the command
 line, the terminal in full screen and the window, the window both light and
 dark), looking up the same word.
@@ -17,12 +17,12 @@ resolution).  Each program runs with settings and a cache of its own, in a
 temporary folder, so the user's settings are not touched (and the pages are
 downloaded afresh):
 
-* the window (py-wtk-gui); only its own window is captured, with
+* the window (py-wk-gui); only its own window is captured, with
   ImageMagick's import, never the screen.  If Xvfb is installed the window
   is opened there, out of sight and with room for any scale; if not, on the
   screen, and the scale is made smaller when the window would not fit;
-* the command line (py-wtk, brief) and the terminal in full screen
-  (py-wtk-tui) in a hidden tmux terminal of a fixed size; what it shows,
+* the command line (py-wk, brief) and the terminal in full screen
+  (py-wk-tui) in a hidden tmux terminal of a fixed size; what it shows,
   with its colours, is written as a web page like a terminal, and Chrome
   (without a window: --headless --screenshot) takes it.
 
@@ -78,7 +78,7 @@ def say(text: str):
 def settings_folder(dark: bool, scale: float = 1) -> str:
     """A temporary folder with a configuration file (dark or light, and the
     contents pane as wide as the scale needs) and a cache folder."""
-    folder = tempfile.mkdtemp(prefix="py-wtk-shot-")
+    folder = tempfile.mkdtemp(prefix="py-wk-shot-")
     with open(os.path.join(folder, "config.toml"), "w", encoding="utf-8") as f:
         f.write(f"[gui]\ncontents_width = {min(700, round(CONTENTS * scale))}\n"
                 "remember_window = false\n"
@@ -88,8 +88,9 @@ def settings_folder(dark: bool, scale: float = 1) -> str:
 
 def environment(folder: str) -> dict:
     env = dict(os.environ)
-    env.pop("PY_WKT_CONFIG", None)              # (the name of earlier versions)
-    env["PY_WTK_CONFIG"] = folder
+    for old in ("PY_WTK_CONFIG", "PY_WKT_CONFIG"):     # (nombres anteriores)
+        env.pop(old, None)
+    env["PY_WK_CONFIG"] = folder
     env["XDG_CACHE_HOME"] = os.path.join(folder, "cache")
     env["PYTHONDONTWRITEBYTECODE"] = "1"
     return env
@@ -155,7 +156,7 @@ def gui(look: str, word: str, lang: str, out: str, scale: float, display: Displa
 
 def gui_child(word: str, lang: str, out: str, scale: str):
     sys.path.insert(0, ROOT)
-    from pywtk import gui as program
+    from pywk import gui as program
     root = tk.Tk(className=program.WM_CLASS)
     #  (the fonts are given in points, so they grow with Tk's scaling; the
     #  window too, with its size)
@@ -254,8 +255,8 @@ class Tmux:
     """A hidden terminal of a size of its own, on a server of its own."""
 
     def __init__(self, columns: int, lines: int, command: list[str], env: dict):
-        self.socket = f"py-wtk-shots-{os.getpid()}"
-        settings = {k: env[k] for k in ("PY_WTK_CONFIG", "XDG_CACHE_HOME",
+        self.socket = f"py-wk-shots-{os.getpid()}"
+        settings = {k: env[k] for k in ("PY_WK_CONFIG", "XDG_CACHE_HOME",
                                         "PYTHONDONTWRITEBYTECODE")}
         self.run("-f", "/dev/null", "new-session", "-d", "-s", "shot",
                  "-x", str(columns), "-y", str(lines),
@@ -288,13 +289,13 @@ def _quoted(arg: str) -> str:
 
 
 def cli(word: str, lang: str, out: str, scale: float):
-    """py-wtk, brief, after a prompt with its command (the terminal is kept
+    """py-wk, brief, after a prompt with its command (the terminal is kept
     open afterwards, to be captured)."""
     folder = settings_folder(dark=False)
     columns, lines = TERMINAL["cli"]
-    shown = f"py-wtk {word} -l {lang} -b"
+    shown = f"py-wk {word} -l {lang} -b"
     script = (f"printf '%s%s\\n' {_quoted(PROMPT)} {_quoted(shown)}; "
-              f"{_quoted(sys.executable)} {_quoted(os.path.join(ROOT, 'py-wtk'))} "
+              f"{_quoted(sys.executable)} {_quoted(os.path.join(ROOT, 'py-wk'))} "
               f"{_quoted(word)} -l {_quoted(lang)} -b --no-pager; exec sleep 3600")
     term = Tmux(columns, lines, ["sh", "-c", script], environment(folder))
     try:
@@ -308,7 +309,7 @@ def cli(word: str, lang: str, out: str, scale: float):
 def tui(word: str, lang: str, out: str, scale: float):
     folder = settings_folder(dark=False)
     columns, lines = TERMINAL["tui"]
-    term = Tmux(columns, lines, [sys.executable, os.path.join(ROOT, "py-wtk-tui"),
+    term = Tmux(columns, lines, [sys.executable, os.path.join(ROOT, "py-wk-tui"),
                                  word, "-l", lang], environment(folder))
     try:
         term.wait_for("Etymology")      # (in the contents and the entry)

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """The fonts of the window, which the user can change.
 
 Ctrl and + or - make all the text larger or smaller, Ctrl and 0 brings back
@@ -118,7 +118,7 @@ def fit_fontconfig():
     usual = escape(old or "fonts.conf")
     text = ("<?xml version=\"1.0\"?>\n"
             "<!DOCTYPE fontconfig SYSTEM \"urn:fontconfig:fonts.dtd\">\n"
-            "<!-- Written by py-wtk-gui: the usual configuration, with the DPI\n"
+            "<!-- Written by py-wk-gui: the usual configuration, with the DPI\n"
             "     of the desktop (Xft.dpi). -->\n"
             "<fontconfig>\n"
             f"  <include ignore_missing=\"no\">{usual}</include>\n"
@@ -158,9 +158,9 @@ def fit_scaling(root):
     reads Xft.dpi itself, and this changes nothing).  Done once for each Tk
     (ROOT may be any of its widgets)."""
     root = root._root()             # (one scaling for each Tk)
-    if getattr(root, "_py_wtk_scaled", False):
+    if getattr(root, "_py_wk_scaled", False):
         return
-    root._py_wtk_scaled = True
+    root._py_wk_scaled = True
     if root.tk.call("tk", "windowingsystem") != "x11":
         return
     dpi = _xft_dpi(_x_resources(root))
@@ -199,9 +199,9 @@ class Fonts:
     @classmethod
     def of(cls, widget, settings=None) -> "Fonts":
         root = widget._root()
-        fonts = getattr(root, "_py_wtk_fonts", None)
+        fonts = getattr(root, "_py_wk_fonts", None)
         if fonts is None:
-            fonts = root._py_wtk_fonts = cls(root, settings)
+            fonts = root._py_wk_fonts = cls(root, settings)
         return fonts
 
     def __init__(self, root, settings):
@@ -222,7 +222,7 @@ class Fonts:
         self.ui_offsets = {name: _size(name) - ui_size for name in UI_FONTS}
         self.values = dict(self.defaults)
         self.values.update(self.load())
-        self.text = font.Font(root, name="PyWtkText", exists=False)
+        self.text = font.Font(root, name="PyWkText", exists=False)
         self._fixed_families: list[str] | None = None
         self.apply()
         mod = "Command" if sys.platform == "darwin" else "Control"

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""Publishes a release of py-wtk on GitHub (with gh) and on Codeberg (with
-tea): the tag vVERSION (the version of pywtk/__init__.py), with the zip and the
+# This file is part of py-wk. See the LICENSE file for details.
+"""Publishes a release of py-wk on GitHub (with gh) and on Codeberg (with
+tea): the tag vVERSION (the version of pywk/__init__.py), with the zip and the
 AppImage attached, and (--rpm) the RPM, also published on Copr.
 
     python3 tools/release.py [--redo] [--notes TEXT | --notes-file FILE]
@@ -27,7 +27,7 @@ In order, each step only if it is needed:
 5. on each forge, makes the release of the tag, or keeps the one there is,
    and attaches the files to it, replacing those of the same name;
 6. with --rpm, sends the source RPM to Copr (copr-cli build, project
-   nivaca/py-wtk), unless --no-copr.  Copr builds it for each Fedora of
+   nivaca/py-wk), unless --no-copr.  Copr builds it for each Fedora of
    the project and signs it with its own key; each build needs a higher
    version-release than the last, so the spec must have been bumped
    (rpmdev-bumpspec, see packaging/COPR.org).
@@ -54,7 +54,7 @@ import tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
-from pywtk.version import NAME, VERSION  # noqa: E402
+from pywk.version import NAME, VERSION  # noqa: E402
 
 TAG = f"v{VERSION}"
 ZIP = os.path.join("dist", f"{NAME}-v.{VERSION}.zip")
@@ -78,7 +78,7 @@ def signing_key() -> str:
 
 def rpm_nvr() -> str:
     """NAME-VERSION-RELEASE of the RPM that packaging/build-rpm.sh makes, as
-    its spec says (py-wtk-1.6-1.fc45); stops if the spec is not at VERSION."""
+    its spec says (py-wk-1.6-1.fc45); stops if the spec is not at VERSION."""
     try:
         nvr = subprocess.run(
             ["rpmspec", "-q", "--srpm", "--qf", "%{name}-%{version}-%{release}", SPEC],

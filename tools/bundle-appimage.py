@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """Makes an AppImage of the program, for Linux: python3 tools/bundle-appimage.py
 
-The AppImage is dist/py-wtk-v.VERSION-x86_64.AppImage (the version of
-pywtk/__init__.py; dist is made in the program's folder if need be, and
+The AppImage is dist/py-wk-v.VERSION-x86_64.AppImage (the version of
+pywk/__init__.py; dist is made in the program's folder if need be, and
 --output gives another folder).  It holds a Python of its own, with Tk and
 curses (a relocatable Python of the python-appimage project,
 https://github.com/niess/python-appimage), and the program as bundle-zip.py
 puts it in the zip, so it runs on any Linux of the last ten years or so,
 without installing anything.
 
-It starts the window (py-wtk-gui); a first argument chooses another of the
+It starts the window (py-wk-gui); a first argument chooses another of the
 programs:
 
-    py-wtk.AppImage [gui|cli|tui] ...
+    py-wk.AppImage [gui|cli|tui] ...
 
-and so does the name it is called by, if it is a link named py-wtk,
-py-wtk-tui or py-wtk-gui.  "help" lists them.  The settings and the cache
-are the user's usual ones (~/.config/py-wtk, ~/.cache/py-wtk), as with the
+and so does the name it is called by, if it is a link named py-wk,
+py-wk-tui or py-wk-gui.  "help" lists them.  The settings and the cache
+are the user's usual ones (~/.config/py-wk, ~/.cache/py-wk), as with the
 zip.
 
 What it needs is downloaded the first time, and kept in the user's cache
-folder (~/.cache/py-wtk-build): the Python and appimagetool
+folder (~/.cache/py-wk-build): the Python and appimagetool
 (https://github.com/AppImage/appimagetool).  --python and --appimagetool
 give them instead.
 """
@@ -34,7 +34,7 @@ import sys
 #  (the program's folder, above tools/)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from pywtk.version import check_python  # noqa: E402
+from pywk.version import check_python  # noqa: E402
 
 check_python()          # (before the modules that need it)
 
@@ -49,7 +49,7 @@ import subprocess  # noqa: E402
 import tempfile  # noqa: E402
 import urllib.request  # noqa: E402
 
-from pywtk.version import COMMIT_FILE, NAME, VERSION  # noqa: E402
+from pywk.version import COMMIT_FILE, NAME, VERSION  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # (above tools/)
 #  Where the AppImage goes, unless --output says otherwise
@@ -59,7 +59,7 @@ ARCH = "x86_64"
 
 #  The Python put in the AppImage (python-appimage has one release per
 #  version, with an AppImage per manylinux; the older the manylinux, the
-#  older the systems it runs on).  py-wtk needs 3.15 or later.
+#  older the systems it runs on).  py-wk needs 3.15 or later.
 PYTHON = "3.15"
 PYTHON_RELEASES = "https://api.github.com/repos/niess/python-appimage/" \
     "releases/tags/python{version}"
@@ -90,9 +90,9 @@ TERMINALS = (
 SHORT_MAX = 32767
 
 #  The programs: (command, launcher)
-COMMANDS = (("gui", "py-wtk-gui"),
-            ("cli", "py-wtk"),
-            ("tui", "py-wtk-tui"))
+COMMANDS = (("gui", "py-wk-gui"),
+            ("cli", "py-wk"),
+            ("tui", "py-wk-tui"))
 
 DESKTOP = f"""[Desktop Entry]
 Type=Application
@@ -111,10 +111,10 @@ StartupWMClass={APP_ID}
 
 #  %(python)s: the interpreter, relative to the AppDir
 APPRUN = r"""#!/bin/bash
-#  Starts py-wtk in the AppImage (made by bundle-appimage.py).
+#  Starts py-wk in the AppImage (made by bundle-appimage.py).
 HERE="$(dirname "$(readlink -f -- "$0")")"
 export APPDIR="${APPDIR:-$HERE}"
-PROGRAM="$APPDIR/opt/py-wtk"
+PROGRAM="$APPDIR/opt/py-wk"
 SELF="${ARGV0:-$0}"
 
 #  The Tcl/Tk, terminal descriptions and certificates of the Python of the
@@ -160,14 +160,14 @@ elif [ "$1" = help ] || [ "$1" = --help ] || [ "$1" = -h ]; then
 elif script="$(program "$1")"; then
     shift
 else
-    script=py-wtk-gui
+    script=py-wk-gui
 fi
 exec "$APPDIR/%(python)s" "$PROGRAM/$script" "$@"
 """
 
 
 def name() -> str:
-    """The name of the AppImage: py-wtk-v.1.0-x86_64.AppImage."""
+    """The name of the AppImage: py-wk-v.1.0-x86_64.AppImage."""
     return f"{NAME}-v.{VERSION}-{ARCH}.AppImage"
 
 
@@ -240,7 +240,7 @@ def extract(appimage: str, folder: str) -> str:
 
 
 def make_appdir(appdir: str, commit: str | None):
-    """Turns the AppDir of the Python into that of py-wtk."""
+    """Turns the AppDir of the Python into that of py-wk."""
     pythons = sorted(glob.glob(os.path.join(appdir, "opt", "python3*", "bin", "python3.*")))
     pythons = [p for p in pythons if not p.endswith("-config")]
     if not pythons:
@@ -297,7 +297,7 @@ def terminfo(folder: str):
     ncurses 5, as the AppRun looks for them there first."""
     if not (shutil.which("infocmp") and shutil.which("tic")):
         print("Warning: without infocmp and tic (ncurses), the AppImage has no "
-              "terminal descriptions, and py-wtk-tui may not start in it",
+              "terminal descriptions, and py-wk-tui may not start in it",
               file=sys.stderr)
         return
     os.makedirs(folder, exist_ok=True)

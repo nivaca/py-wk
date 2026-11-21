@@ -1,5 +1,24 @@
 # Release notes
 
+## 1.16
+
+**A new name: py-wk.** py-wtk is now called py-wk, a name that is easier to tell apart
+from the old py-wkt. Everything follows it: the commands (`py-wk`, `py-wk-tui`,
+`py-wk-gui`), the installer (`py-wk-install.py`), the RPM package, the settings folder
+(`~/.config/py-wk`), the cache (`~/.cache/py-wk`), the variable `PY_WK_CONFIG` and the
+repositories, now `nivaca/py-wk` on Codeberg and GitHub (the old addresses lead there).
+
+The settings of py-wtk move by themselves to the new folder the first time the program
+starts, and the old `config.toml` is renamed `config.toml.old`; the pages kept in
+`~/.cache/py-wtk` are not moved, and that folder can be deleted. The variables
+`PY_WTK_CONFIG` and `PY_WKT_CONFIG` are still read. `py-wk-install.py` removes the menu
+entries and icons that it had added under the old names.
+
+The RPM is now on Copr as `nivaca/py-wk`, and the package py-wk replaces the package
+py-wtk. Whoever installed it from Copr should change the repository:
+`sudo dnf copr disable nivaca/py-wtk`, `sudo dnf copr enable nivaca/py-wk` and
+`sudo dnf install py-wk`.
+
 ## 1.15
 
 **The licences of the software it uses.** `docs/LICENSES.md` (in Spanish,

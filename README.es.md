@@ -1,21 +1,25 @@
-# py-wtk
+# py-wk
 
 *[Read in English](README.md)*
 
-py-wtk es un pequeño programa para consultar el [Wiktionary en inglés](https://en.wiktionary.org)
+py-wk es un pequeño programa para consultar el [Wiktionary en inglés](https://en.wiktionary.org)
 sin abrir el navegador. Viene en tres versiones, que comparten el mismo código por dentro:
 
 | Programa     | Qué es                                                       |
 |--------------|--------------------------------------------------------------|
-| `py-wtk`     | herramienta de línea de comandos; imprime la entrada en la terminal |
-| `py-wtk-tui` | interfaz de terminal a pantalla completa (curses)            |
-| `py-wtk-gui` | ventana de escritorio (Tkinter)                              |
+| `py-wk`      | herramienta de línea de comandos; imprime la entrada en la terminal |
+| `py-wk-tui`  | interfaz de terminal a pantalla completa (curses)            |
+| `py-wk-gui`  | ventana de escritorio (Tkinter)                              |
 
 Muestra la entrada completa, no solo las definiciones: etimología, pronunciación,
 definiciones con ejemplos y citas, notas de uso, tablas de flexión (declinaciones,
 conjugaciones), sinónimos, términos derivados y relacionados, descendientes, traducciones,
 referencias y lecturas adicionales. Por defecto muestra **todas las lenguas** de la página,
 pero se pueden elegir solo las que interesan; por ejemplo, solo latín, o latín y español.
+
+py-wk se llamaba **py-wtk** hasta la versión 1.15, y **py-wkt** antes de la 1.4. El nombre
+nuevo cambia los comandos, la carpeta de ajustes y los repositorios; los ajustes de los
+nombres viejos pasan solos a la carpeta nueva (véase [Ajustes](#ajustes)).
 
 Lo escribí yo, Nicolás Vaughan (<nicolasvaughan@proton.me>), en
 2026.
@@ -27,7 +31,7 @@ Bogotá, Colombia.
 ## Capturas de pantalla
 
 Esta es la misma palabra, *rosa* (solo su entrada latina, con `-l la`), en la ventana
-(`py-wtk-gui`, aquí en modo oscuro):
+(`py-wk-gui`, aquí en modo oscuro):
 
 ![La ventana, en modo oscuro](docs/img/gui_dark.png)
 
@@ -35,11 +39,11 @@ la ventana en modo claro:
 
 ![La ventana, en modo claro](docs/img/gui_light.png)
 
-en la línea de comandos (`py-wtk`, aquí en modo breve, con `-b`):
+en la línea de comandos (`py-wk`, aquí en modo breve, con `-b`):
 
 ![La línea de comandos](docs/img/cli.png)
 
-y en la terminal, a pantalla completa (`py-wtk-tui`):
+y en la terminal, a pantalla completa (`py-wk-tui`):
 
 ![La terminal, a pantalla completa](docs/img/tui.png)
 
@@ -50,74 +54,83 @@ sin mostrarlo, con ajustes propios, y las guarda en `docs/img/` (véase
 ## Requisitos
 
 - Python 3.15 o posterior.
-- Nada más para `py-wtk` y `py-wtk-tui`: solo se usa la biblioteca estándar, no hay que
+- Nada más para `py-wk` y `py-wk-tui`: solo se usa la biblioteca estándar, no hay que
   instalar paquetes con pip.
-- Para `py-wtk-gui` hace falta Tkinter. En muchas distribuciones de Linux viene en un
+- Para `py-wk-gui` hace falta Tkinter. En muchas distribuciones de Linux viene en un
   paquete aparte: `python3-tkinter` en Fedora, `python3-tk` en Debian y Ubuntu.
 - Y, claro, conexión a Internet.
 
 ## Instalación
 
 **Lo más fácil, en Linux:** descarga el AppImage de la última versión
-(`py-wtk-v.VERSIÓN-x86_64.AppImage`), hazlo ejecutable y ejecútalo. Lleva su propio Python,
+(`py-wk-v.VERSIÓN-x86_64.AppImage`), hazlo ejecutable y ejecútalo. Lleva su propio Python,
 así que no hace falta instalar nada:
 
 ```sh
-chmod +x py-wtk-v.*-x86_64.AppImage
-./py-wtk-v.*-x86_64.AppImage            # la ventana
-./py-wtk-v.*-x86_64.AppImage cli rosa   # la línea de comandos (también: tui; help los lista)
+chmod +x py-wk-v.*-x86_64.AppImage
+./py-wk-v.*-x86_64.AppImage            # la ventana
+./py-wk-v.*-x86_64.AppImage cli rosa   # la línea de comandos (también: tui; help los lista)
 ```
 
-Un enlace al AppImage llamado `py-wtk`, `py-wtk-tui` o `py-wtk-gui` abre ese programa.
+Un enlace al AppImage llamado `py-wk`, `py-wk-tui` o `py-wk-gui` abre ese programa.
 
 **En Fedora:** instala el paquete RPM, que usa el Python y el Tk del sistema y añade los tres
 programas al `PATH` y al menú de aplicaciones, con su icono. Lo más fácil es desde
-[Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wtk/), así `dnf upgrade` trae cada
+[Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wk/), así `dnf upgrade` trae cada
 versión nueva:
 
 ```sh
-sudo dnf copr enable nivaca/py-wtk
-sudo dnf install py-wtk
+sudo dnf copr enable nivaca/py-wk
+sudo dnf install py-wk
 ```
 
-Las versiones publicadas traen también el RPM (`py-wtk-VERSIÓN-1.fcNN.noarch.rpm`), firmado,
-con su clave pública (`RPM-GPG-KEY-py-wtk`, que se importa una vez):
-`sudo rpm --import RPM-GPG-KEY-py-wtk` y luego `sudo dnf install ./py-wtk-*.noarch.rpm`.
+Si tenías py-wtk instalado desde Copr, cambia de repositorio; el paquete py-wk reemplaza al
+paquete py-wtk:
+
+```sh
+sudo dnf copr disable nivaca/py-wtk
+sudo dnf copr enable nivaca/py-wk
+sudo dnf install py-wk
+```
+
+Las versiones publicadas traen también el RPM (`py-wk-VERSIÓN-1.fcNN.noarch.rpm`), firmado,
+con su clave pública (`RPM-GPG-KEY-py-wk`, que se importa una vez):
+`sudo rpm --import RPM-GPG-KEY-py-wk` y luego `sudo dnf install ./py-wk-*.noarch.rpm`.
 Funciona en cualquier Fedora con Python 3.15 o posterior, sea cual sea el número `fc`. O
 genéralo desde la carpeta del programa (un clon de git):
 
 ```sh
 sudo dnf install rpm-build python3-devel desktop-file-utils python3-tkinter
 packaging/build-rpm.sh
-sudo dnf install build/rpm/RPMS/noarch/py-wtk-*.rpm
+sudo dnf install build/rpm/RPMS/noarch/py-wk-*.rpm
 ```
 
-El programa se instala en `/usr/share/py-wtk`, con enlaces en `/usr/bin`.
+El programa se instala en `/usr/share/py-wk`, con enlaces en `/usr/bin`.
 
 **Con tu propio Python** (cualquier sistema): descarga el zip de la última versión
-(`py-wtk-v.VERSIÓN.zip`) o clona el repositorio, pon la carpeta donde prefieras y crea
+(`py-wk-v.VERSIÓN.zip`) o clona el repositorio, pon la carpeta donde prefieras y crea
 enlaces a los tres lanzadores en un directorio que esté en tu `PATH`:
 
 ```sh
-ln -s ~/py-wtk/py-wtk      ~/.local/bin/
-ln -s ~/py-wtk/py-wtk-tui  ~/.local/bin/
-ln -s ~/py-wtk/py-wtk-gui  ~/.local/bin/
+ln -s ~/py-wk/py-wk      ~/.local/bin/
+ln -s ~/py-wk/py-wk-tui  ~/.local/bin/
+ln -s ~/py-wk/py-wk-gui  ~/.local/bin/
 ```
 
-Los lanzadores encuentran el paquete `pywtk` que está a su lado, incluso cuando se los llama
+Los lanzadores encuentran el paquete `pywk` que está a su lado, incluso cuando se los llama
 mediante un enlace. También se puede ejecutar la herramienta de línea de comandos con
-`python3 -m pywtk PALABRA` desde dentro de la carpeta.
+`python3 -m pywk PALABRA` desde dentro de la carpeta.
 
-**En el menú de aplicaciones:** `py-wtk-install.py` añade la ventana, la versión de terminal
-y la línea de comandos (`py-wtk (GUI)`, `py-wtk (TUI)` y `py-wtk (CLI)`, esta última con
+**En el menú de aplicaciones:** `py-wk-install.py` añade la ventana, la versión de terminal
+y la línea de comandos (`py-wk (GUI)`, `py-wk (TUI)` y `py-wk (CLI)`, esta última con
 `-i`, que pide una palabra tras otra), con su icono, al menú de aplicaciones en Linux, al
 menú Inicio en Windows o a `~/Applications` en macOS. Solo escribe en tus propias carpetas,
 así que no hacen falta permisos de administrador:
 
 ```sh
-python3 py-wtk-install.py               # añadirlas
-python3 py-wtk-install.py --only-gui    # añadir solo la ventana
-python3 py-wtk-install.py --uninstall   # quitarlas
+python3 py-wk-install.py               # añadirlas
+python3 py-wk-install.py --only-gui    # añadir solo la ventana
+python3 py-wk-install.py --uninstall   # quitarlas
 ```
 
 Con `--only-gui`, si una ejecución anterior añadió la versión de terminal y la línea de
@@ -125,21 +138,21 @@ comandos, sus entradas se quitan.
 
 Las entradas abren el programa desde su carpeta; si mueves la carpeta, vuelve a ejecutarlo.
 
-## Línea de comandos: `py-wtk`
+## Línea de comandos: `py-wk`
 
 ```sh
-py-wtk rosa                       # entrada completa, todas las lenguas
-py-wtk rosa -l la                 # solo latín
-py-wtk rosa -l Latin              # lo mismo, con el nombre (en inglés) de la lengua
-py-wtk rosa -l la,es,it           # varias lenguas
-py-wtk rosa -b                    # breve: solo las definiciones
-py-wtk rosa -l la -o etymology    # solo algunas secciones
-py-wtk house -x translations,quotations,tables   # ocultar algunas secciones
-py-wtk hablar -l es -o conjugation
-py-wtk ice cream                  # expresiones de varias palabras, sin comillas
-py-wtk -s recei                   # buscar títulos de páginas
-py-wtk house --json               # JSON estructurado, para usar desde otros programas
-py-wtk -i                         # pide una palabra tras otra (también: rosa -l la)
+py-wk rosa                       # entrada completa, todas las lenguas
+py-wk rosa -l la                 # solo latín
+py-wk rosa -l Latin              # lo mismo, con el nombre (en inglés) de la lengua
+py-wk rosa -l la,es,it           # varias lenguas
+py-wk rosa -b                    # breve: solo las definiciones
+py-wk rosa -l la -o etymology    # solo algunas secciones
+py-wk house -x translations,quotations,tables   # ocultar algunas secciones
+py-wk hablar -l es -o conjugation
+py-wk ice cream                  # expresiones de varias palabras, sin comillas
+py-wk -s recei                   # buscar títulos de páginas
+py-wk house --json               # JSON estructurado, para usar desde otros programas
+py-wk -i                         # pide una palabra tras otra (también: rosa -l la)
 ```
 
 Opciones:
@@ -177,12 +190,12 @@ ajuste `cli.links`.
 El código de salida es `0` si todo va bien, `1` si no se encontró nada y `2` si hubo un
 error de red.
 
-## Interfaz de terminal: `py-wtk-tui`
+## Interfaz de terminal: `py-wk-tui`
 
 ```sh
-py-wtk-tui            # empieza con la pantalla vacía; pulsa / para buscar
-py-wtk-tui rosa       # abre directamente la palabra
-py-wtk-tui rosa -l la
+py-wk-tui            # empieza con la pantalla vacía; pulsa / para buscar
+py-wk-tui rosa       # abre directamente la palabra
+py-wk-tui rosa -l la
 ```
 
 A la izquierda hay un índice con las lenguas y las secciones; a la derecha, la entrada.
@@ -217,12 +230,12 @@ navegador.
 a la terminal que lo haga (OSC 52, también dentro de tmux si este lo permite), cosa que
 hacen muchas terminales.
 
-## Ventana de escritorio: `py-wtk-gui`
+## Ventana de escritorio: `py-wk-gui`
 
 ```sh
-py-wtk-gui
-py-wtk-gui rosa -l la
-py-wtk-gui rosa --dark --size 13       # oscuro y más grande solo esta vez (también existe --light)
+py-wk-gui
+py-wk-gui rosa -l la
+py-wk-gui rosa --dark --size 13       # oscuro y más grande solo esta vez (también existe --light)
 ```
 
 - Cuadro de búsqueda con sugerencias mientras escribes (flecha abajo para elegir una).
@@ -257,13 +270,13 @@ tablas de declinaciones y conjugaciones queden bien alineadas.
 Los tres programas comparten un único archivo de ajustes, `config.toml`, en la carpeta de
 configuración habitual del sistema:
 
-| Sistema | Archivo                                                |
-|---------|--------------------------------------------------------|
-| Linux   | `~/.config/py-wtk/config.toml` (o `$XDG_CONFIG_HOME/py-wtk/`) |
-| macOS   | `~/Library/Application Support/py-wtk/config.toml`     |
-| Windows | `%APPDATA%\py-wtk\config.toml`                         |
+| Sistema | Archivo                                                   |
+|---------|-----------------------------------------------------------|
+| Linux   | `~/.config/py-wk/config.toml` (o `$XDG_CONFIG_HOME/py-wk/`) |
+| macOS   | `~/Library/Application Support/py-wk/config.toml`         |
+| Windows | `%APPDATA%\py-wk\config.toml`                             |
 
-Con la variable `PY_WTK_CONFIG` se puede indicar otra carpeta. El archivo es
+Con la variable `PY_WK_CONFIG` se puede indicar otra carpeta. El archivo es
 [TOML](https://toml.io) y está dividido en secciones: `[general]`, `[cli]`, `[tui]`,
 `[gui]`, `[fonts]` y `[appearance]`. Cualquier ajuste se puede omitir, y entonces tiene su
 valor habitual; en el archivo, los omitidos aparecen comentados con su valor habitual, y
@@ -275,10 +288,11 @@ esté en ese momento: si la ventana y la interfaz de terminal están abiertas a 
 deshace los cambios de la otra. Restablecer el valor habitual de un ajuste lo quita del
 archivo. Al reescribirlo no se conservan los comentarios propios.
 
-(Las versiones anteriores se llamaban **py-wkt**. Si las usabas, sus ajustes pasan una vez
-a la carpeta nueva: el `config.toml` de `~/.config/py-wkt/`, o su `settings.ini` más
-antiguo; el archivo antiguo se renombra `*.old`. La variable `PY_WKT_CONFIG` se sigue
-leyendo.)
+(Las versiones anteriores se llamaban **py-wtk** y, antes, **py-wkt**. Si las usabas, sus
+ajustes pasan una vez a la carpeta nueva: el `config.toml` de `~/.config/py-wtk/` o, si no
+lo hay, el de `~/.config/py-wkt/` (o su `settings.ini` más antiguo); el archivo antiguo se
+renombra `*.old`. Las variables `PY_WTK_CONFIG` y `PY_WKT_CONFIG` se siguen leyendo. Las
+páginas guardadas en `~/.cache/py-wtk` no se trasladan; esa carpeta se puede borrar.)
 
 Qué se puede cambiar:
 
@@ -319,13 +333,13 @@ Formas de cambiarlos:
 
 - **Línea de comandos:**
   ```sh
-  py-wtk --settings                         # listarlos todos, con sus valores actuales
-  py-wtk --configure                        # pequeño menú interactivo
-  py-wtk --set general.languages=la,en      # cambiar uno (se puede repetir)
-  py-wtk --set preferred_languages=la       # la sección se puede omitir si no es ambigua
-  py-wtk --unset general.languages          # volver al valor por defecto
-  py-wtk --edit-settings                    # abrir el archivo en $VISUAL / $EDITOR
-  py-wtk --clear-cache                      # borrar las páginas guardadas en disco
+  py-wk --settings                         # listarlos todos, con sus valores actuales
+  py-wk --configure                        # pequeño menú interactivo
+  py-wk --set general.languages=la,en      # cambiar uno (se puede repetir)
+  py-wk --set preferred_languages=la       # la sección se puede omitir si no es ambigua
+  py-wk --unset general.languages          # volver al valor por defecto
+  py-wk --edit-settings                    # abrir el archivo en $VISUAL / $EDITOR
+  py-wk --clear-cache                      # borrar las páginas guardadas en disco
   ```
 - **Interfaz de terminal:** pulsa `S`. Enter cambia el ajuste seleccionado (los de sí/no y
   los de opciones cambian directamente; los demás piden el valor), `d` restablece el valor
@@ -346,11 +360,11 @@ El programa descarga la página en HTML desde la API REST del Wiktionary
 (`/api/rest_v1/page/html/…`) y la convierte en texto. Para ello solo usa la biblioteca
 estándar de Python (`urllib`, `html.parser`, `textwrap`, `curses`, `tkinter`). Las entradas
 grandes, como *house*, tienen las traducciones en una página aparte (`house/translations`);
-py-wtk la descarga también y muestra las traducciones en su lugar.
+py-wk la descarga también y muestra las traducciones en su lugar.
 
 Las páginas descargadas se guardan comprimidas en la carpeta de caché del sistema
-(`~/.cache/py-wtk` en Linux, `~/Library/Caches/py-wtk` en macOS,
-`%LOCALAPPDATA%\py-wtk\cache` en Windows) durante un día (ajuste
+(`~/.cache/py-wk` en Linux, `~/Library/Caches/py-wk` en macOS,
+`%LOCALAPPDATA%\py-wk\cache` en Windows) durante un día (ajuste
 `general.cache_days`), de modo que volver a consultar la misma palabra es instantáneo y no
 genera nuevas peticiones al Wiktionary. En la TUI y en la GUI, *recargar* (`r`, `F5`)
 vuelve a descargar la página; en la línea de comandos, `--refresh`.
@@ -358,8 +372,8 @@ vuelve a descargar la página; en la línea de comandos, `--refresh`.
 Organización del código:
 
 ```
-py-wtk, py-wtk-tui, py-wtk-gui   lanzadores pequeños
-pywtk/
+py-wk, py-wk-tui, py-wk-gui   lanzadores pequeños
+pywk/
   api.py      descarga de páginas, búsqueda, caché
   dom.py      análisis del HTML
   text.py     limpieza del texto, anchura en la terminal, colores
@@ -370,9 +384,9 @@ pywtk/
   gui_fonts.py  fuentes de la ventana
   render.py   conversión de una entrada a texto (común a los tres programas), JSON
   common.py   lo común a los tres programas: opciones, mensajes, historial, enlaces
-  cli.py      py-wtk
-  tui.py      py-wtk-tui
-  gui.py      py-wtk-gui
+  cli.py      py-wk
+  tui.py      py-wk-tui
+  gui.py      py-wk-gui
   version.py  nombre, versión, commit del que se hizo, Python necesario
 icons/        los iconos (Linux, macOS, Windows)
 ```
@@ -384,19 +398,19 @@ generan los iconos. No van dentro de los paquetes.
 
 | Script                     | Qué hace                                                       |
 |----------------------------|----------------------------------------------------------------|
-| `tools/bundle-zip.py`      | genera `dist/py-wtk-v.VERSIÓN.zip`: el programa, los iconos y los documentos, sin archivos ocultos, `__pycache__` ni las herramientas, con un archivo `COMMIT` (que muestran `--version` y *About*). `--list` solo lista los archivos. |
-| `tools/bundle-appimage.py` | genera `dist/py-wtk-v.VERSIÓN-x86_64.AppImage`, con un Python propio (de [python-appimage](https://github.com/niess/python-appimage)) y el programa como en el zip. La primera vez descarga ese Python y [appimagetool](https://github.com/AppImage/appimagetool) en `~/.cache/py-wtk-build`; `--python` y `--appimagetool` permiten indicarlos. |
+| `tools/bundle-zip.py`      | genera `dist/py-wk-v.VERSIÓN.zip`: el programa, los iconos y los documentos, sin archivos ocultos, `__pycache__` ni las herramientas, con un archivo `COMMIT` (que muestran `--version` y *About*). `--list` solo lista los archivos. |
+| `tools/bundle-appimage.py` | genera `dist/py-wk-v.VERSIÓN-x86_64.AppImage`, con un Python propio (de [python-appimage](https://github.com/niess/python-appimage)) y el programa como en el zip. La primera vez descarga ese Python y [appimagetool](https://github.com/AppImage/appimagetool) en `~/.cache/py-wk-build`; `--python` y `--appimagetool` permiten indicarlos. |
 | `tools/release.py`         | publica la etiqueta `vVERSIÓN` en GitHub (`gh`) y Codeberg (`tea`) con el zip y el AppImage: los genera, etiqueta, sube y crea o actualiza las versiones. Con `--rpm`, también el RPM firmado y su clave, y envía el RPM a Copr (`copr-cli`; `--no-copr` lo omite). Muestra antes los comandos y pregunta; `--dry-run` solo los muestra. Véase `--help`. |
 | `tools/screenshots.py`     | toma las capturas de los tres programas en `docs/img/` (la ventana clara y oscura), con ajustes y caché propios, de modo que no toca los tuyos. Necesita tmux, ImageMagick, Chrome o Chromium, y Xvfb o una pantalla. |
-| `tools/icons.py`           | genera de nuevo todos los iconos a partir de `icons/py-wtk.svg`: los PNG y los iconos de Linux, macOS y Windows. Cada tamaño lo dibuja Inkscape (también como Flatpak) a partir del SVG; el `.icns` y el `.ico` se montan con Pillow. `--dry-run` solo muestra cómo se ejecutaría Inkscape. |
+| `tools/icons.py`           | genera de nuevo todos los iconos a partir de `icons/py-wk.svg`: los PNG y los iconos de Linux, macOS y Windows. Cada tamaño lo dibuja Inkscape (también como Flatpak) a partir del SVG; el `.icns` y el `.ico` se montan con Pillow. `--dry-run` solo muestra cómo se ejecutaría Inkscape. |
 
-El RPM lo genera `packaging/build-rpm.sh` a partir de `packaging/py-wtk.spec`, en
+El RPM lo genera `packaging/build-rpm.sh` a partir de `packaging/py-wk.spec`, en
 `build/rpm/`. `--sign` lo firma solo con la clave del proyecto (`SIGNING_KEY` en el script;
 `--sign=CLAVE` para otra), y se detiene si esa clave no está en el llavero de la máquina.
 Las versiones publicadas van todas firmadas con la clave del autor, de huella
-`8187 0643 CA22 1AF9 0C30 554E BE68 32CD 3599 4948`; hay una copia de la clave pública en `packaging/RPM-GPG-KEY-py-wtk`; `packaging/COPR.org` explica cómo se publica en Copr.
+`8187 0643 CA22 1AF9 0C30 554E BE68 32CD 3599 4948`; hay una copia de la clave pública en `packaging/RPM-GPG-KEY-py-wk`; `packaging/COPR.org` explica cómo se publica en Copr.
 
-La versión está en `pywtk/__init__.py`, y la del RPM en `packaging/py-wtk.spec`
+La versión está en `pywk/__init__.py`, y la del RPM en `packaging/py-wk.spec`
 (`rpmdev-bumpspec -n X.Y`).
 
 ## Notas
@@ -406,9 +420,9 @@ La versión está en `pywtk/__init__.py`, y la del RPM en `packaging/py-wtk.spec
   veces de forma automática, pero si el error continúa, espera un minuto. La caché en
   disco ayuda a evitarlo.
 - El contenido de las entradas procede del Wiktionary y de sus autores, bajo la licencia
-  [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es). py-wtk solo lo
+  [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.es). py-wk solo lo
   muestra; respeta esa licencia si copias textos de las entradas.
-- py-wtk no es un proyecto oficial del Wiktionary ni de la Fundación Wikimedia.
+- py-wk no es un proyecto oficial del Wiktionary ni de la Fundación Wikimedia.
 
 ## Licencia
 
@@ -423,6 +437,6 @@ ni siquiera la garantía implícita de COMERCIABILIDAD o IDONEIDAD PARA UN PROP�
 PARTICULAR. Consulta el archivo [LICENSE](LICENSE) para más detalles. (El texto legal
 vinculante es la versión original en inglés.)
 
-El software libre que py-wtk usa o lleva consigo (en el AppImage), y las herramientas con
+El software libre que py-wk usa o lleva consigo (en el AppImage), y las herramientas con
 que se hace, están listados con sus licencias en
 [docs/LICENCIAS_es.md](docs/LICENCIAS_es.md).

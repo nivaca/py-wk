@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""Add py-wtk to the applications menu: python3 py-wtk-install.py
+# This file is part of py-wk. See the LICENSE file for details.
+"""Add py-wk to the applications menu: python3 py-wk-install.py
 [--only-gui | --uninstall]
 
 Adds three entries that start the program from this folder, with the
-program's icon: the window (py-wtk-gui), the full-screen terminal version
-(py-wtk-tui, in a terminal) and the command line (py-wtk -i, in a terminal:
+program's icon: the window (py-wk-gui), the full-screen terminal version
+(py-wk-tui, in a terminal) and the command line (py-wk -i, in a terminal:
 it asks for one word after another).  With --only-gui, only the window's
 (and the other two are removed, if an earlier run added them).
 
@@ -18,7 +18,8 @@ it asks for one word after another).  With --only-gui, only the window's
 
 Everything goes in the user's own folders, so no administrator rights are
 needed.  Run it again after moving this folder; --uninstall removes the
-entries and icons it added, and nothing else.
+entries and icons it added, and nothing else.  Both also remove the entries
+and icons of the versions named py-wtk and py-wkt.
 """
 
 import os
@@ -26,7 +27,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from pywtk.version import check_python  # noqa: E402
+from pywk.version import check_python  # noqa: E402
 
 check_python()          # (before the modules that need it)
 
@@ -37,14 +38,17 @@ import shutil  # noqa: E402
 import subprocess  # noqa: E402
 from typing import NamedTuple  # noqa: E402
 
-from pywtk.version import NAME, VERSION  # noqa: E402
+from pywk.version import NAME, VERSION  # noqa: E402
 
-APP_ID = "py-wtk"                       # the names of the entries and icons
-BUNDLE_ID = "io.github.nivaca.py-wtk"
+APP_ID = "py-wk"                       # the names of the entries and icons
+BUNDLE_ID = "io.github.nivaca.py-wk"
+#  Los nombres de versiones anteriores: sus accesos e iconos se quitan al
+#  instalar y al desinstalar
+OLD_APP_IDS = ("py-wtk", "py-wkt")
 COMMENT = "Look up words in the English Wiktionary"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ICON_DIR = os.path.join(HERE, "icons")
-PROG = "py-wtk-install.py"
+PROG = "py-wk-install.py"
 
 
 def display_name(kind):
@@ -53,9 +57,9 @@ def display_name(kind):
 
 
 #  (kind, launcher, its arguments, whether it runs in a terminal)
-PROGRAMS = (("GUI", "py-wtk-gui", (), False),
-            ("TUI", "py-wtk-tui", (), True),
-            ("CLI", "py-wtk", ("-i",), True))
+PROGRAMS = (("GUI", "py-wk-gui", (), False),
+            ("TUI", "py-wk-tui", (), True),
+            ("CLI", "py-wk", ("-i",), True))
 KINDS = tuple(kind for kind, _, _, _ in PROGRAMS)
 
 
@@ -87,7 +91,7 @@ Exec={exec}
 """
 
 #  The lines that differ, by kind (StartupWMClass is the className that
-#  pywtk/gui.py gives the window)
+#  pywk/gui.py gives the window)
 ENTRY_REST = {
     "GUI": f"Terminal=false\nStartupNotify=true\nStartupWMClass={APP_ID}\n",
     "TUI": "Terminal=true\n",
@@ -104,8 +108,9 @@ def data_home():
         os.path.join(os.path.expanduser("~"), ".local", "share")
 
 
-def entry_path(kind):
-    return os.path.join(data_home(), "applications", ENTRY_FILES[kind])
+def entry_path(kind, app_id=APP_ID):
+    name = ENTRY_FILES[kind].replace(APP_ID, app_id, 1)
+    return os.path.join(data_home(), "applications", name)
 
 
 def exec_arg(arg):
@@ -170,9 +175,9 @@ def install_linux(chosen: list[tuple]) -> list[str]:
     return paths
 
 
-def is_our_entry(path: str) -> bool:
+def is_our_entry(path: str, app_id: str = APP_ID) -> bool:
     """Whether PATH is a .desktop file this script made (a regular file,
-    not a link, with our icon)."""
+    not a link, with our icon; APP_ID's for earlier names)."""
     if not path.endswith(".desktop") or os.path.islink(path) \
             or not os.path.isfile(path):
         return False
@@ -182,7 +187,23 @@ def is_our_entry(path: str) -> bool:
     except (OSError, UnicodeDecodeError):
         return False
     return bool(lines) and lines[0] == "[Desktop Entry]" \
-        and f"Icon={APP_ID}" in lines
+        and f"Icon={app_id}" in lines
+
+
+def old_linux() -> list[str]:
+    """The entries and icons of the versions with other names (only those
+    the installer made: entries with their icon, icons that are files)."""
+    theme = os.path.join(data_home(), "icons", "hicolor")
+    paths = []
+    for old in OLD_APP_IDS:
+        paths += [path for path in (entry_path(kind, old) for kind in KINDS)
+                  if is_our_entry(path, old)]
+        for _, rel in icon_files():
+            folder, name = os.path.split(rel)
+            path = os.path.join(theme, folder, name.replace(APP_ID, old, 1))
+            if os.path.isfile(path) and not os.path.islink(path):
+                paths.append(path)
+    return paths
 
 
 def uninstall_linux(chosen: list[tuple], icons: bool = True) -> list[str]:
@@ -271,6 +292,13 @@ def uninstall_windows(chosen: list[tuple], icons: bool = True) -> list[str]:
                    if os.path.isfile(s.path)])
 
 
+def old_windows() -> list[str]:
+    """The shortcuts of the versions with other names."""
+    paths = (os.path.join(start_menu(), display_name(kind).replace(NAME, old, 1)
+                          + ".lnk") for old in OLD_APP_IDS for kind in KINDS)
+    return [path for path in paths if os.path.isfile(path)]
+
+
 # ---------------------------------------------------------------------------
 #  macOS
 
@@ -285,14 +313,15 @@ def app_path(kind):
     return os.path.join(applications_dir(), display_name(kind) + ".app")
 
 
-def is_ours(app: str) -> bool:
-    """Whether APP is an application this script made."""
+def is_ours(app: str, bundle_id: str = BUNDLE_ID) -> bool:
+    """Whether APP is an application this script made (BUNDLE_ID's, for
+    earlier names)."""
     try:
         with open(os.path.join(app, "Contents", "Info.plist"), "rb") as f:
             info = plistlib.load(f)
     except (OSError, ValueError, plistlib.InvalidFileException):
         return False
-    return str(info.get("CFBundleIdentifier", "")).startswith(BUNDLE_ID)
+    return str(info.get("CFBundleIdentifier", "")).startswith(bundle_id + ".")
 
 
 def write_script(path: str, text: str):
@@ -366,6 +395,18 @@ def uninstall_macos(chosen: list[tuple], icons: bool = True) -> list[str]:
     return removed
 
 
+def old_macos() -> list[str]:
+    """The applications of the versions with other names."""
+    apps = []
+    for old in OLD_APP_IDS:
+        for kind in KINDS:
+            app = os.path.join(applications_dir(),
+                               display_name(kind).replace(NAME, old, 1) + ".app")
+            if os.path.isdir(app) and is_ours(app, BUNDLE_ID.replace(APP_ID, old)):
+                apps.append(app)
+    return apps
+
+
 # ---------------------------------------------------------------------------
 
 def system(platform=None) -> str:
@@ -380,6 +421,20 @@ def system(platform=None) -> str:
 INSTALL = {"linux": install_linux, "windows": install_windows, "macos": install_macos}
 UNINSTALL = {"linux": uninstall_linux, "windows": uninstall_windows,
              "macos": uninstall_macos}
+OLD = {"linux": old_linux, "windows": old_windows, "macos": old_macos}
+
+
+def remove_old() -> list[str]:
+    """Removes the entries of the versions named py-wtk and py-wkt."""
+    paths = OLD[system()]()
+    for path in paths:
+        if os.path.isdir(path):
+            shutil.rmtree(path)         # (an application of macOS)
+        else:
+            os.remove(path)
+    if paths and system() == "linux":
+        refresh_linux()
+    return paths
 
 
 def install(kinds=KINDS) -> tuple[list[str], list[str]]:
@@ -388,11 +443,11 @@ def install(kinds=KINDS) -> tuple[list[str], list[str]]:
     added = INSTALL[system()](programs(kinds))
     others = [p for p in PROGRAMS if p[0] not in kinds]
     removed = UNINSTALL[system()](others, icons=False) if others else []
-    return added, removed
+    return added, removed + remove_old()
 
 
 def uninstall() -> list[str]:
-    return UNINSTALL[system()](PROGRAMS)
+    return UNINSTALL[system()](PROGRAMS) + remove_old()
 
 
 WHERE = {"linux": "the applications menu",
@@ -406,7 +461,7 @@ def main(argv=None):
         description=f"Add {NAME} to the applications menu, or remove it.")
     what = parser.add_mutually_exclusive_group()
     what.add_argument("--only-gui", action="store_true",
-                      help="add only the window (py-wtk-gui), and remove the entries of the "
+                      help="add only the window (py-wk-gui), and remove the entries of the "
                            "terminal version and the command line if they are there")
     what.add_argument("--uninstall", action="store_true",
                       help="remove what was added")

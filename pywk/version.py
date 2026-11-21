@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""The name and version of py-wtk, the commit it was made from, and the
+# This file is part of py-wk. See the LICENSE file for details.
+"""The name and version of py-wk, the commit it was made from, and the
 Python it needs.
 
 The launchers read this module before the rest of the program, so it must
@@ -15,7 +15,7 @@ import sys
 
 from . import __version__
 
-NAME = "py-wtk"
+NAME = "py-wk"
 VERSION = __version__
 MIN_PYTHON = (3, 15)
 
@@ -64,13 +64,13 @@ def _git_commit(folder):
     return lines[1]
 
 
-#  What the program is, after its name and version in titles: "py-wtk 1.0:
+#  What the program is, after its name and version in titles: "py-wk 1.0:
 #  the English Wiktionary"
 TAGLINE = "the English Wiktionary"
 
 
 def title():
-    """'py-wtk 1.0: the English Wiktionary', for titles and headers."""
+    """'py-wk 1.0: the English Wiktionary', for titles and headers."""
     return "%s %s: %s" % (NAME, VERSION, TAGLINE)
 
 

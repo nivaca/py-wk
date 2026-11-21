@@ -1,12 +1,26 @@
 # Changelog
 
-All notable changes to py-wtk (called py-wkt in earlier versions). The
-releases, with the zip, the AppImage and the signed RPM, are on
-[Codeberg](https://codeberg.org/nivaca/py-wtk/releases) and
-[GitHub](https://github.com/nivaca/py-wtk/releases); the RPM
-is also on [Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wtk/).
+All notable changes to py-wk (called py-wtk up to 1.15, and py-wkt before
+1.4). The releases, with the zip, the AppImage and the signed RPM, are on
+[Codeberg](https://codeberg.org/nivaca/py-wk/releases) and
+[GitHub](https://github.com/nivaca/py-wk/releases); the RPM
+is also on [Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wk/)
+(up to 1.15, in [nivaca/py-wtk](https://copr.fedorainfracloud.org/coprs/nivaca/py-wtk/)).
+The entries keep the names each version had.
 The git history begins with 1.4: versions 1.0 to 1.3 are taken from the
 release notes in `docs/NOTES.md`, which give no dates.
+
+## 1.16 — 2026-11-21
+
+- **Renamed py-wk** (it was py-wtk): the commands `py-wk`, `py-wk-tui`
+  and `py-wk-gui`, the installer `py-wk-install.py`, the RPM package,
+  the settings folder `~/.config/py-wk`, the cache `~/.cache/py-wk`, the
+  variable `PY_WK_CONFIG` and the repositories `nivaca/py-wk`.
+- The settings of `~/.config/py-wtk` move once to the new folder (before
+  those of `~/.config/py-wkt`); `PY_WTK_CONFIG` is still read.
+- `py-wk-install.py` removes the menu entries and icons it had added as
+  py-wtk or py-wkt.
+- The RPM is on Copr as `nivaca/py-wk`; the package replaces py-wtk.
 
 ## 1.15 — 2026-11-21
 

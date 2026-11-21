@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """The light or dark look of the window (and its dialogues).
 
 Both looks are drawn with Tk's "clam" theme in colours of their own, except
@@ -59,9 +59,9 @@ class Theme:
     @classmethod
     def of(cls, widget) -> "Theme":
         root = widget._root()
-        theme = getattr(root, "_py_wtk_theme", None)
+        theme = getattr(root, "_py_wk_theme", None)
         if theme is None:
-            theme = root._py_wtk_theme = cls(root)
+            theme = root._py_wk_theme = cls(root)
         return theme
 
     def __init__(self, root):
@@ -276,7 +276,7 @@ class Theme:
         """The colours of the Tk widgets already there."""
         cls = widget.winfo_class()
         if isinstance(widget, (tk.Tk, tk.Toplevel)):
-            cls = "Toplevel"            # (whatever its class, as py-wtk)
+            cls = "Toplevel"            # (whatever its class, as py-wk)
         try:
             if cls in ("Toplevel", "Frame", "Canvas"):
                 widget.configure(background=c["background"])

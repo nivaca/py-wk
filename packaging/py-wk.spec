@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 #
 # Build with packaging/build-rpm.sh, which makes the source tarball.
 
-Name:           py-wtk
-Version:        1.15
+Name:           py-wk
+Version:        1.16
 Release:        1%{?dist}
 Summary:        Look up words in the English Wiktionary
 
 License:        GPL-3.0-or-later
-URL:            https://github.com/nivaca/py-wtk
+URL:            https://github.com/nivaca/py-wk
 Source0:        %{name}-%{version}.tar.gz
 
 BuildArch:      noarch
@@ -21,17 +21,21 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  python3-tkinter
 
 Requires:       python3 >= 3.15
-# The window (py-wtk-gui) is Tk.
+# The window (py-wk-gui) is Tk.
 Requires:       python3-tkinter
 Requires:       hicolor-icon-theme
 
+# El paquete se llamaba py-wtk hasta la 1.15: este lo reemplaza al actualizar.
+Obsoletes:      py-wtk < 1.16
+Provides:       py-wtk = %{version}-%{release}
+
 %description
-py-wtk looks up words in the English Wiktionary and shows their entries
+py-wk looks up words in the English Wiktionary and shows their entries
 (definitions, etymology, pronunciation, inflection tables, quotations ...)
 for any language, with the sections and languages you choose.
 
-It comes as three programs: a command line (py-wtk), a full-screen
-terminal interface (py-wtk-tui) and a window (py-wtk-gui). Only the
+It comes as three programs: a command line (py-wk), a full-screen
+terminal interface (py-wk-tui) and a window (py-wk-gui). Only the
 Python standard library is used; it needs a connection to the Internet.
 
 %prep
@@ -41,26 +45,26 @@ Python standard library is used; it needs a connection to the Internet.
 # Nothing to build: the program is Python.
 
 %install
-# The program: the three launchers and the pywtk package, with the icons
-# (the window reads them), not the tools, docs or py-wtk-install.py (the
-# package has its own menu entries). The launchers find pywtk next to
+# The program: the three launchers and the pywk package, with the icons
+# (the window reads them), not the tools, docs or py-wk-install.py (the
+# package has its own menu entries). The launchers find pywk next to
 # their real path, so /usr/bin has links to them.
 install -d %{buildroot}%{_datadir}/%{name}
-for f in py-wtk py-wtk-tui py-wtk-gui; do
+for f in py-wk py-wk-tui py-wk-gui; do
     install -pm 0755 "$f" %{buildroot}%{_datadir}/%{name}/
 done
-install -d %{buildroot}%{_datadir}/%{name}/pywtk
-install -pm 0644 pywtk/*.py %{buildroot}%{_datadir}/%{name}/pywtk/
+install -d %{buildroot}%{_datadir}/%{name}/pywk
+install -pm 0644 pywk/*.py %{buildroot}%{_datadir}/%{name}/pywk/
 [ -f COMMIT ] && install -pm 0644 COMMIT %{buildroot}%{_datadir}/%{name}/
 install -d %{buildroot}%{_datadir}/%{name}/icons/linux
-install -pm 0644 icons/py-wtk.svg %{buildroot}%{_datadir}/%{name}/icons/
+install -pm 0644 icons/py-wk.svg %{buildroot}%{_datadir}/%{name}/icons/
 cp -pr icons/linux/hicolor %{buildroot}%{_datadir}/%{name}/icons/linux/
 # Compiled now: users cannot write next to the modules, so Python would
 # otherwise compile every module on every start.
-%py_byte_compile %{python3} %{buildroot}%{_datadir}/%{name}/pywtk
+%py_byte_compile %{python3} %{buildroot}%{_datadir}/%{name}/pywk
 
 install -d %{buildroot}%{_bindir}
-for f in py-wtk py-wtk-tui py-wtk-gui; do
+for f in py-wk py-wk-tui py-wk-gui; do
     ln -s ../share/%{name}/"$f" %{buildroot}%{_bindir}/"$f"
 done
 
@@ -77,27 +81,31 @@ done
 # The installed programs start, from their links, with no settings or
 # cache of the builder's (and no network: nothing is looked up).
 export HOME="$PWD/check-home" XDG_CONFIG_HOME= XDG_CACHE_HOME=
-%{buildroot}%{_bindir}/py-wtk --version | grep -q '%{version}'
-%{buildroot}%{_bindir}/py-wtk-tui --help | grep -q '%{version}'
-%{buildroot}%{_bindir}/py-wtk-gui --help >/dev/null
+%{buildroot}%{_bindir}/py-wk --version | grep -q '%{version}'
+%{buildroot}%{_bindir}/py-wk-tui --help | grep -q '%{version}'
+%{buildroot}%{_bindir}/py-wk-gui --help >/dev/null
 PYTHONPATH=%{buildroot}%{_datadir}/%{name} %{python3} -c \
-    'import pywtk.cli, pywtk.tui, pywtk.gui, pywtk.render, pywtk.settings'
+    'import pywk.cli, pywk.tui, pywk.gui, pywk.render, pywk.settings'
 
 %files
 %license LICENSE
 %doc README.md README.es.md docs/NOTES.md docs/NOTES.es.md
 %doc docs/DESCRIPTION.md docs/DESCRIPCIÓN_es.md
 %doc docs/LICENSES.md docs/LICENCIAS_es.md CHANGELOG.md CHANGELOG_es.md
-%{_bindir}/py-wtk
-%{_bindir}/py-wtk-tui
-%{_bindir}/py-wtk-gui
+%{_bindir}/py-wk
+%{_bindir}/py-wk-tui
+%{_bindir}/py-wk-gui
 %{_datadir}/%{name}/
-%{_datadir}/applications/py-wtk.desktop
-%{_datadir}/applications/py-wtk.cli.desktop
-%{_datadir}/applications/py-wtk.tui.desktop
-%{_datadir}/icons/hicolor/*/apps/py-wtk.*
+%{_datadir}/applications/py-wk.desktop
+%{_datadir}/applications/py-wk.cli.desktop
+%{_datadir}/applications/py-wk.tui.desktop
+%{_datadir}/icons/hicolor/*/apps/py-wk.*
 
 %changelog
+* Sat Nov 21 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.16-1
+- Renamed py-wk (it was py-wtk): commands, package, settings folder and
+  repositories; the package replaces py-wtk
+
 * Sat Nov 21 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.15-1
 - A list of the open-source software used, with its licences (docs/LICENSES.md),
   and a changelog

@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""py-wtk-gui — a Tkinter window for browsing the English Wiktionary.
+# This file is part of py-wk. See the LICENSE file for details.
+"""py-wk-gui — a Tkinter window for browsing the English Wiktionary.
 
-    py-wtk-gui            # empty window, type a word in the search box
-    py-wtk-gui rosa       # open "rosa" directly
-    py-wtk-gui rosa -l la # Latin only
+    py-wk-gui            # empty window, type a word in the search box
+    py-wk-gui rosa       # open "rosa" directly
+    py-wk-gui rosa -l la # Latin only
 
 Double-click any word in an entry to look it up.
 """
@@ -262,7 +262,7 @@ class App:
         h = tk.Menu(m, tearoff=False)
         h.add_command(label="Keys", command=lambda: messagebox.showinfo("Keys", KEYS_HELP))
         h.add_command(label="About", command=lambda: messagebox.showinfo(
-            "About py-wtk", f"{NAME} {describe()}\n\nThe English Wiktionary on your desktop.\n"
+            "About py-wk", f"{NAME} {describe()}\n\nThe English Wiktionary on your desktop.\n"
                             "Content from en.wiktionary.org (CC BY-SA).\n\n"
                             "By Nicolas Vaughan (nicolasvaughan@proton.me), Associate Professor\n"
                             "of Literature at the School of Arts and Humanities of the\n"
@@ -1135,8 +1135,8 @@ class SettingsDialog:
             ("General", (("", "general"),)),
             ("Terminal UI", (("", "tui"),)),
             ("Command line", (("", "cli"),)))
-    NOTES = {"Terminal UI": "These apply to py-wtk-tui; they are kept in the same file.",
-             "Command line": "These apply to the py-wtk command; they are kept in the same file."}
+    NOTES = {"Terminal UI": "These apply to py-wk-tui; they are kept in the same file.",
+             "Command line": "These apply to the py-wk command; they are kept in the same file."}
     SAMPLE = "rosa, rosae f — ῥόδον — роза — [ˈrɔ.sa] — 0123456789"
 
     def __init__(self, app: "App"):
@@ -1303,7 +1303,7 @@ class SettingsDialog:
 
 
 #  The window's class (for the window manager and the desktop entry) and icons
-WM_CLASS = "py-wtk"
+WM_CLASS = "py-wk"
 ICON_DIR = os.path.join(HERE, "icons", "linux", "hicolor")
 
 
@@ -1321,7 +1321,7 @@ def set_icon(root):
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(prog="py-wtk-gui",
+    ap = argparse.ArgumentParser(prog="py-wk-gui",
                                  description=f"{title()}, in a window.")
     add_lookup_args(ap, "word or phrase to open")
     look = ap.add_mutually_exclusive_group()
@@ -1337,7 +1337,7 @@ def main(argv=None) -> int:
         root = tk.Tk(className=WM_CLASS)
         tkfont.nametofont("TkDefaultFont").metrics("linespace")  # (fontconfig is read)
     except tk.TclError as e:
-        print(f"py-wtk-gui: cannot open a window ({e})", file=sys.stderr)
+        print(f"py-wk-gui: cannot open a window ({e})", file=sys.stderr)
         return 1
     finally:
         undo()

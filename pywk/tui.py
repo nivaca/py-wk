@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
-"""py-wtk-tui — a curses interface for browsing the English Wiktionary.
+# This file is part of py-wk. See the LICENSE file for details.
+"""py-wk-tui — a curses interface for browsing the English Wiktionary.
 
-    py-wtk-tui            # start with an empty search prompt
-    py-wtk-tui rosa       # open "rosa" directly
-    py-wtk-tui rosa -l la # Latin only
+    py-wk-tui            # start with an empty search prompt
+    py-wk-tui rosa       # open "rosa" directly
+    py-wk-tui rosa -l la # Latin only
 
 Press ? inside the program for the list of keys.
 """
@@ -1058,13 +1058,13 @@ class App:
 
 def main(argv=None) -> int:
     os.environ.setdefault("ESCDELAY", "25")
-    ap = argparse.ArgumentParser(prog="py-wtk-tui",
+    ap = argparse.ArgumentParser(prog="py-wk-tui",
                                  description=f"{program_title()}, in the terminal.")
     add_lookup_args(ap, "word or phrase to open")
     args = ap.parse_args(argv)
     if not (sys.stdin.isatty() and sys.stdout.isatty()):
         # (e.g. started from a menu whose terminal could not be found)
-        sys.exit("py-wtk-tui must run in a terminal; to start it from the applications "
+        sys.exit("py-wk-tui must run in a terminal; to start it from the applications "
                  "menu, the desktop needs a working terminal emulator.")
     word = " ".join(args.word).strip() or None
     try:

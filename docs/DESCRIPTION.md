@@ -1,28 +1,28 @@
-How py-wtk was made
-===================
+How py-wk was made
+==================
 
 *[Leer en español](DESCRIPCIÓN_es.md)*
 
-py-wtk is a small program for reading the English Wiktionary
+py-wk is a small program for reading the English Wiktionary
 (<https://en.wiktionary.org>) without a web browser.  You give it a word
 or an expression in any language, and it shows the whole Wiktionary
 entry, cleanly formatted, in the terminal or in a desktop window.
-Nicolas Vaughan made it in 2026.  Earlier versions were called *py-wkt*;
-the current version is 1.15.  Here I explain how it was made, in six
-stages.
+Nicolas Vaughan made it in 2026.  It was called *py-wkt* at first and
+*py-wtk* up to 1.15; the current version is 1.16.  Here I explain how it
+was made, in seven stages.
 
 It is meant for people who look up words often: students and teachers
 of languages (Latin, Greek, Spanish, English ...), translators,
 philologists, and anyone who wants the information in Wiktionary without
-the clutter and the slowness of the web page.  py-wtk is free software,
+the clutter and the slowness of the web page.  py-wk is free software,
 under the GNU General Public License, version 3 or later.  The content
 of the entries comes from Wiktionary and its contributors, under the
-CC BY-SA 4.0 licence; py-wtk only displays it, and it is not an official
+CC BY-SA 4.0 licence; py-wk only displays it, and it is not an official
 project of Wiktionary or of the Wikimedia Foundation.  The program uses
 Python and its standard library (under the Python Software Foundation
 License), with Tcl/Tk and ncurses (under permissive licences); the
 AppImage also carries the libraries of its own Python.  `docs/LICENSES.md`
-lists all of them, and the tools that make py-wtk, with their licences.
+lists all of them, and the tools that make py-wk, with their licences.
 
 Nicolas Vaughan is Associate Professor of Literature at the School of Arts
 and Humanities of the Universidad de los Andes, Bogotá, Colombia.
@@ -31,7 +31,7 @@ and Humanities of the Universidad de los Andes, Bogotá, Colombia.
 --------------------
 
 Wiktionary gives each page in HTML through its REST API
-(`/api/rest_v1/page/html/...`).  py-wtk downloads that HTML and converts
+(`/api/rest_v1/page/html/...`).  py-wk downloads that HTML and converts
 it to text by itself, with the standard library only: `urllib` for the
 download, `html.parser` for reading the page into a small tree
 (`dom.py`), and `textwrap` for the lines.  The page is then cut into its
@@ -43,10 +43,10 @@ references and further reading.
 The inflection tables (declensions and conjugations) are kept aligned,
 with the width that each character actually takes in the terminal
 (`text.py`).  The big entries, like *house*, keep their translations in a
-separate page (`house/translations`); py-wtk downloads that page too and
+separate page (`house/translations`); py-wk downloads that page too and
 puts the translations back in their place.
 
-A Wiktionary page usually has many languages.  py-wtk shows all of
+A Wiktionary page usually has many languages.  py-wk shows all of
 them by default, but the user can choose only some (`-l la`, or
 `-l la,es,it`), put some first, show only some sections
 (`-o etymology`), hide others, or ask for a brief view with only the
@@ -55,9 +55,9 @@ definitions.
 2. Three programs, one renderer
 -------------------------------
 
-py-wtk comes in three forms: a command line (`py-wtk`), a full-screen
-terminal interface (`py-wtk-tui`, with `curses`), and a desktop window
-(`py-wtk-gui`, with Tk, from the standard library).  All three turn an
+py-wk comes in three forms: a command line (`py-wk`), a full-screen
+terminal interface (`py-wk-tui`, with `curses`), and a desktop window
+(`py-wk-gui`, with Tk, from the standard library).  All three turn an
 entry into text with the same code (`render.py`), so an entry looks the
 same, and contains the same things, in all of them.  The command line
 can also give the entry as structured JSON (`--json`), for other
@@ -76,7 +76,7 @@ pages can be searched.
 ---------------------
 
 The three programs share one settings file, `config.toml`, in the usual
-settings folder of each system (`~/.config/py-wtk/` in Linux).  It can
+settings folder of each system (`~/.config/py-wk/` in Linux).  It can
 be edited from the command line (`--set`, `--unset`), from a settings
 screen in the terminal interface, from a settings window in the GUI, or
 by hand.  `settings.py` says, in one place, what each setting is, its
@@ -85,10 +85,10 @@ settings that you change, over the file as it is at that moment, so if
 the window and the terminal interface are open at the same time, one
 does not undo the changes of the other.
 
-The versions called *py-wkt* kept their settings in another folder,
-first in a `settings.ini` and then in a `config.toml`.  py-wtk reads
-them once, moves them to the new folder and renames the old file
-`*.old`.
+The versions called *py-wkt*, and later *py-wtk*, kept their settings
+in other folders, first in a `settings.ini` and then in a `config.toml`.
+py-wk reads them once, moves them to the new folder and renames the old
+file `*.old` (see stage 7).
 
 The downloaded pages are kept compressed in the cache folder of the
 system for one day (`general.cache_days`), so looking up the same word
@@ -126,7 +126,7 @@ now shown without them, keeping its colours.
 5. Distribution
 ---------------
 
-py-wtk needs Python 3.15 or later and nothing else, so
+py-wk needs Python 3.15 or later and nothing else, so
 it can be used from a zip or a clone of the repository, with three small
 launchers to link into the `PATH`.  For Linux there is also an AppImage,
 which carries its own Python: download, make it executable, run.  Since
@@ -148,7 +148,7 @@ afterwards.  A small module, `version.py`, is read before the rest of
 the program, and it stays readable by old versions of Python, so a
 Python that is too old gets a clear message instead of an error.
 
-`py-wtk-install.py` adds the programs, with their icon, to the
+`py-wk-install.py` adds the programs, with their icon, to the
 applications menu in Linux, the Start menu in Windows or
 `~/Applications` in macOS, writing only to the user's folders, so
 no administrator rights are needed.  `--only-gui` adds only the window,
@@ -174,13 +174,35 @@ cache, the common options.  In 1.4 they moved into one module,
 the page does not have, the same message for a network error).  The
 entries are shown exactly as before.
 
-The package `pywtk/` now has 16 modules, organised in layers:
+The package `pywk/` now has 16 modules, organised in layers:
 downloading and cache (`api.py`), HTML parsing (`dom.py`), text and
 colours (`text.py`), languages and sections (`entry.py`), rendering to
 text or JSON (`render.py`), settings (`config.py`, `settings.py`), what
 the three programs share (`common.py`), and one module for each
 interface (`cli.py`, `tui.py`, `gui.py`, with `gui_theme.py` and
 `gui_fonts.py`).  In total, around 5,200 lines of Python.
+
+7. A new name
+-------------
+
+The program was first called *py-wkt*, and in 1.4 *py-wtk*, for
+"Wiktionary toolkit".  The two names differed only in the order of two
+letters, and the folder of my own clone kept the first one, so I mixed
+them up myself: in the end there were a `~/.config/py-wkt` and a
+`~/.config/py-wtk`, and it was not obvious which one the program used.
+In 1.16 it became *py-wk*, which cannot be confused with either.
+
+The new name reaches everything: the commands, the package `pywk/`, the
+installer, the RPM, the settings and cache folders, the variable
+`PY_WK_CONFIG`, the repositories on Codeberg and GitHub (renamed, so the
+old addresses lead to the new ones) and the KRunner runner, now
+*krunner-py-wk*.  Nobody should have to do anything by hand.  The
+settings move by themselves, those of py-wtk before those of py-wkt; the
+old variables are still read; the installer removes the menu entries and
+icons it had added under the old names; and the RPM package declares
+that it replaces py-wtk, so `dnf` changes one for the other.  Copr cannot
+rename a project, so the RPM goes to a new one, `nivaca/py-wk`.  The
+release notes and the changelog keep, for each version, the name it had.
 
 Testing
 -------

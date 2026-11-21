@@ -1,19 +1,19 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
-# This file is part of py-wtk. See the LICENSE file for details.
+# This file is part of py-wk. See the LICENSE file for details.
 """The configuration file, config.toml, in the user's settings folder.
 
-    Linux     $XDG_CONFIG_HOME/py-wtk/config.toml (usually ~/.config)
-    macOS     ~/Library/Application Support/py-wtk/config.toml
-    Windows   %APPDATA%\\py-wtk\\config.toml
+    Linux     $XDG_CONFIG_HOME/py-wk/config.toml (usually ~/.config)
+    macOS     ~/Library/Application Support/py-wk/config.toml
+    Windows   %APPDATA%\\py-wk\\config.toml
 
-($PY_WTK_CONFIG names another folder; $PY_WKT_CONFIG, of the versions
-named py-wkt, is still read.)  Its sections:
+($PY_WK_CONFIG names another folder; $PY_WTK_CONFIG and $PY_WKT_CONFIG, of
+the versions named py-wtk and py-wkt, are still read.)  Its sections:
 
     [general]      what is shown, searching, the disk cache (all programs)
-    [cli]          the command line (py-wtk)
-    [tui]          the terminal interface (py-wtk-tui)
-    [gui]          the window (py-wtk-gui)
+    [cli]          the command line (py-wk)
+    [tui]          the terminal interface (py-wk-tui)
+    [gui]          the window (py-wk-gui)
     [fonts]        the fonts of the window
     [appearance]   dark_mode: whether the window is dark
 
@@ -33,23 +33,25 @@ import sys
 import tomllib
 
 CONFIG_FILE = "config.toml"
-APP = "py-wtk"
-#  The name of earlier versions, whose settings are moved here once (see
-#  settings.Settings._move_old)
-OLD_APP = "py-wkt"
+APP = "py-wk"
+#  Los nombres de versiones anteriores (py-wtk hasta la 1.15, py-wkt antes
+#  de la 1.4), cuyos ajustes pasan aquí una vez (véase
+#  settings.Settings._move_old); el primero que tenga ajustes gana
+OLD_APPS = ("py-wtk", "py-wkt")
 
 
 class ConfigError(Exception):
     """config.toml cannot be read."""
 
 
-#  The variables that name the settings folder (the second, of the versions
-#  named py-wkt, is still read)
-CONFIG_VARS = ("PY_WTK_CONFIG", "PY_WKT_CONFIG")
+#  Las variables que nombran la carpeta de ajustes (las dos últimas, de las
+#  versiones llamadas py-wtk y py-wkt, se siguen leyendo)
+CONFIG_VARS = ("PY_WK_CONFIG", "PY_WTK_CONFIG", "PY_WKT_CONFIG")
 
 
 def _named_config_dir() -> str | None:
-    """The folder named by $PY_WTK_CONFIG or $PY_WKT_CONFIG, if any."""
+    """The folder named by $PY_WK_CONFIG (or $PY_WTK_CONFIG, $PY_WKT_CONFIG),
+    if any."""
     for var in CONFIG_VARS:
         if os.environ.get(var):
             return os.path.expanduser(os.environ[var])
@@ -57,15 +59,18 @@ def _named_config_dir() -> str | None:
 
 
 def config_dir() -> str:
-    """Where the user's settings are kept: $PY_WTK_CONFIG (or $PY_WKT_CONFIG,
-    of earlier versions), else the usual settings folder of the system."""
+    """Where the user's settings are kept: $PY_WK_CONFIG (or the variables of
+    earlier versions), else the usual settings folder of the system."""
     return _named_config_dir() or system_config_dir(APP)
 
 
-def old_config_dir() -> str | None:
-    """The settings folder of the versions named py-wkt (None when a folder
-    was named with the variables: then there is nothing to move)."""
-    return None if _named_config_dir() else system_config_dir(OLD_APP)
+def old_config_dirs() -> list[str]:
+    """The settings folders of the versions named py-wtk and py-wkt, newest
+    first (none when a folder was named with the variables: then there is
+    nothing to move)."""
+    if _named_config_dir():
+        return []
+    return [system_config_dir(app) for app in OLD_APPS]
 
 
 def system_config_dir(app: str) -> str:
