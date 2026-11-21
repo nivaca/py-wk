@@ -87,6 +87,7 @@ PYTHONPATH=%{buildroot}%{_datadir}/%{name} %{python3} -c \
 %license LICENSE
 %doc README.md README.es.md docs/NOTES.md docs/NOTES.es.md
 %doc docs/DESCRIPTION.md docs/DESCRIPCIÓN_es.md
+%doc docs/LICENSES.md docs/LICENCIAS_es.md
 %{_bindir}/py-wtk
 %{_bindir}/py-wtk-tui
 %{_bindir}/py-wtk-gui

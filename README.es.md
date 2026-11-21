@@ -422,3 +422,7 @@ Este programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA 
 ni siquiera la garantía implícita de COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO
 PARTICULAR. Consulta el archivo [LICENSE](LICENSE) para más detalles. (El texto legal
 vinculante es la versión original en inglés.)
+
+El software libre que py-wtk usa o lleva consigo (en el AppImage), y las herramientas con
+que se hace, están listados con sus licencias en
+[docs/LICENCIAS_es.md](docs/LICENCIAS_es.md).

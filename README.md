@@ -411,3 +411,6 @@ the GNU General Public License as published by the Free Software Foundation, eit
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
 without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See the [LICENSE](LICENSE) file for more details.
+
+The open-source software that py-wtk uses or carries (in the AppImage), and the tools
+used to make it, are listed with their licences in [docs/LICENSES.md](docs/LICENSES.md).
