@@ -8,8 +8,8 @@ py-wk is a small program for reading the English Wiktionary
 or an expression in any language, and it shows the whole Wiktionary
 entry, cleanly formatted, in the terminal or in a desktop window.
 Nicolas Vaughan made it in 2026.  It was called *py-wkt* at first and
-*py-wtk* up to 1.15; the current version is 1.16.  Here I explain how it
-was made, in seven stages.
+*py-wtk* up to 1.15; the current version is 1.17.  Here I explain how it
+was made, in eight stages.
 
 It is meant for people who look up words often: students and teachers
 of languages (Latin, Greek, Spanish, English ...), translators,
@@ -204,6 +204,37 @@ that it replaces py-wtk, so `dnf` changes one for the other.  Copr cannot
 rename a project, so the RPM goes to a new one, `nivaca/py-wk`.  The
 release notes and the changelog keep, for each version, the name it had.
 
+8. A package for Debian and Ubuntu
+----------------------------------
+
+The RPM served Fedora, and the AppImage everyone else, but on Debian and
+Ubuntu the natural thing is a `.deb`, so since 1.17 the releases have one
+as well.  I build everything on Fedora, where there is no `dpkg-deb`, and
+I did not want a tool more for one file.  A `.deb` is a simple thing: an
+`ar` archive with a version line and two compressed tar files, one with
+the control data and one with the files to install.  So
+`packaging/build-deb.py` writes it with the standard library only
+(`tarfile`, and a few lines for `ar`), from the same files that git knows
+and that the RPM takes.  It installs the same as the RPM: the launchers
+and `pywk/` in `/usr/share/py-wk`, links to them in `/usr/bin`, the menu
+entries, the icons and the documents, plus the `copyright` file and the
+compressed changelog that Debian expects.  The modules are compiled when
+the package is installed, and the compiled files are removed with it.
+All the files take the time of the commit, so one commit always gives
+the same package.
+
+Debian has no signature inside the package, as the RPM has, so the
+`.deb` goes with a detached one (`.deb.asc`), made by the same key.
+`tools/release.py` builds and attaches both to every release, unless it
+is given `--no-deb`.
+
+The one real problem is Python.  The package depends on `python3 (>=
+3.15)`, the version py-wk needs, and today neither Debian (not even its
+unstable branch, which has 3.14) nor Ubuntu has it, so `apt` refuses to
+install it there.  I preferred an honest dependency to a package that
+installs and then stops with a message; until those systems have Python
+3.15, the AppImage is the way to use py-wk on them.
+
 Testing
 -------
 
@@ -212,7 +243,12 @@ Linux.  `tools/screenshots.py` runs the three
 programs as a user does (the window in light and dark mode), with
 settings and a cache of their own, and the screenshots of the README
 come from it; they were checked by eye, and in 1.6 they were taken
-again.  There are no automated tests yet.
+again.  The `.deb` was checked in a Debian container (unstable): `dpkg`
+reads and installs it (forcing the Python dependency), the links in
+`/usr/bin` lead to the launchers, the modules are compiled, the launcher
+gives its message about the old Python, and the package is removed
+without leaving anything; lintian finds only minor warnings (no manual
+pages, for instance).  There are no automated tests yet.
 
 For installation and full usage instructions, see the
 [README](../README.md); the changes of each version are in

@@ -5,7 +5,7 @@
 # Build with packaging/build-rpm.sh, which makes the source tarball.
 
 Name:           py-wk
-Version:        1.16
+Version:        1.17
 Release:        1%{?dist}
 Summary:        Look up words in the English Wiktionary
 
@@ -102,6 +102,9 @@ PYTHONPATH=%{buildroot}%{_datadir}/%{name} %{python3} -c \
 %{_datadir}/icons/hicolor/*/apps/py-wk.*
 
 %changelog
+* Sat Nov 21 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.17-1
+- A .deb package for Debian and Ubuntu is published with each release
+
 * Sat Nov 21 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.16-1
 - Renamed py-wk (it was py-wtk): commands, package, settings folder and
   repositories; the package replaces py-wtk

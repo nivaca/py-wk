@@ -1,7 +1,8 @@
 # Changelog
 
 All notable changes to py-wk (called py-wtk up to 1.15, and py-wkt before
-1.4). The releases, with the zip, the AppImage and the signed RPM, are on
+1.4). The releases, with the zip, the AppImage, the signed RPM and (since
+1.17) the signed `.deb`, are on
 [Codeberg](https://codeberg.org/nivaca/py-wk/releases) and
 [GitHub](https://github.com/nivaca/py-wk/releases); the RPM
 is also on [Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wk/)
@@ -9,6 +10,16 @@ is also on [Copr](https://copr.fedorainfracloud.org/coprs/nivaca/py-wk/)
 The entries keep the names each version had.
 The git history begins with 1.4: versions 1.0 to 1.3 are taken from the
 release notes in `docs/NOTES.md`, which give no dates.
+
+## 1.17 — 2026-11-21
+
+- A `.deb` package for Debian, Ubuntu and their derivatives
+  (`py-wk_1.17-1_all.deb`), with a detached signature (`.deb.asc`) by the
+  key of the RPM; it installs the same files as the RPM and needs the
+  system's `python3` to be 3.15 or later.
+- `packaging/build-deb.py` makes it, with the Python standard library
+  only; `tools/release.py` attaches it to the releases (`--no-deb` does
+  not).
 
 ## 1.16 — 2026-11-21
 

@@ -1,5 +1,15 @@
 # Release notes
 
+## 1.17
+
+**A package for Debian and Ubuntu.** The releases now have a `.deb`
+(`py-wk_1.17-1_all.deb`), which installs the same as the RPM: the three programs in
+`/usr/bin`, the menu entries, the icons and the documents, on the Python and Tk of the
+system. It is signed apart (`.deb.asc`) with the key of the RPM. It needs Python 3.15 as the
+system's `python3`, which Debian and Ubuntu do not have yet; until they do, the AppImage
+is the way there. `packaging/build-deb.py` makes it, with the Python standard library only,
+and `tools/release.py` attaches it to every release (`--no-deb` leaves it out).
+
 ## 1.16
 
 **A new name: py-wk.** py-wtk is now called py-wk, a name that is easier to tell apart

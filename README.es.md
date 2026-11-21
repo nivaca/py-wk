@@ -107,6 +107,23 @@ sudo dnf install build/rpm/RPMS/noarch/py-wk-*.rpm
 
 El programa se instala en `/usr/share/py-wk`, con enlaces en `/usr/bin`.
 
+**En Debian, Ubuntu y sus derivadas:** las versiones publicadas traen también un paquete
+`.deb` (`py-wk_VERSIÓN-1_all.deb`), que usa el Python y el Tk del sistema y añade los tres
+programas al `PATH` y al menú de aplicaciones, como el RPM. Necesita que el `python3` del
+sistema sea 3.15 o posterior, así que por ahora solo se instala donde la distribución lo
+tenga; en las demás, usa el AppImage. El paquete va firmado aparte
+(`py-wk_VERSIÓN-1_all.deb.asc`) con la misma clave del RPM; compruébalo, si quieres, e
+instálalo con `apt`:
+
+```sh
+gpg --import RPM-GPG-KEY-py-wk
+gpg --verify py-wk_*_all.deb.asc py-wk_*_all.deb
+sudo apt install ./py-wk_*_all.deb
+```
+
+O genéralo desde la carpeta del programa, en cualquier Linux (solo necesita Python y git):
+`python3 packaging/build-deb.py` lo escribe en `build/deb/` y lo copia en `dist/`.
+
 **Con tu propio Python** (cualquier sistema): descarga el zip de la última versión
 (`py-wk-v.VERSIÓN.zip`) o clona el repositorio, pon la carpeta donde prefieras y crea
 enlaces a los tres lanzadores en un directorio que esté en tu `PATH`:
@@ -400,7 +417,7 @@ generan los iconos. No van dentro de los paquetes.
 |----------------------------|----------------------------------------------------------------|
 | `tools/bundle-zip.py`      | genera `dist/py-wk-v.VERSIÓN.zip`: el programa, los iconos y los documentos, sin archivos ocultos, `__pycache__` ni las herramientas, con un archivo `COMMIT` (que muestran `--version` y *About*). `--list` solo lista los archivos. |
 | `tools/bundle-appimage.py` | genera `dist/py-wk-v.VERSIÓN-x86_64.AppImage`, con un Python propio (de [python-appimage](https://github.com/niess/python-appimage)) y el programa como en el zip. La primera vez descarga ese Python y [appimagetool](https://github.com/AppImage/appimagetool) en `~/.cache/py-wk-build`; `--python` y `--appimagetool` permiten indicarlos. |
-| `tools/release.py`         | publica la etiqueta `vVERSIÓN` en GitHub (`gh`) y Codeberg (`tea`) con el zip y el AppImage: los genera, etiqueta, sube y crea o actualiza las versiones. Con `--rpm`, también el RPM firmado y su clave, y envía el RPM a Copr (`copr-cli`; `--no-copr` lo omite). Muestra antes los comandos y pregunta; `--dry-run` solo los muestra. Véase `--help`. |
+| `tools/release.py`         | publica la etiqueta `vVERSIÓN` en GitHub (`gh`) y Codeberg (`tea`) con el zip, el AppImage y el `.deb` firmado (`--no-deb` lo omite): los genera, etiqueta, sube y crea o actualiza las versiones. Con `--rpm`, también el RPM firmado y su clave, y envía el RPM a Copr (`copr-cli`; `--no-copr` lo omite). Muestra antes los comandos y pregunta; `--dry-run` solo los muestra. Véase `--help`. |
 | `tools/screenshots.py`     | toma las capturas de los tres programas en `docs/img/` (la ventana clara y oscura), con ajustes y caché propios, de modo que no toca los tuyos. Necesita tmux, ImageMagick, Chrome o Chromium, y Xvfb o una pantalla. |
 | `tools/icons.py`           | genera de nuevo todos los iconos a partir de `icons/py-wk.svg`: los PNG y los iconos de Linux, macOS y Windows. Cada tamaño lo dibuja Inkscape (también como Flatpak) a partir del SVG; el `.icns` y el `.ico` se montan con Pillow. `--dry-run` solo muestra cómo se ejecutaría Inkscape. |
 
@@ -409,6 +426,11 @@ El RPM lo genera `packaging/build-rpm.sh` a partir de `packaging/py-wk.spec`, en
 `--sign=CLAVE` para otra), y se detiene si esa clave no está en el llavero de la máquina.
 Las versiones publicadas van todas firmadas con la clave del autor, de huella
 `8187 0643 CA22 1AF9 0C30 554E BE68 32CD 3599 4948`; hay una copia de la clave pública en `packaging/RPM-GPG-KEY-py-wk`; `packaging/COPR.org` explica cómo se publica en Copr.
+
+El `.deb` lo genera `packaging/build-deb.py`, en `build/deb/` (y lo copia en `dist/`), sin
+más que la biblioteca estándar de Python, de modo que también se puede hacer en Fedora.
+Instala los mismos archivos que el RPM. `--sign` añade una firma aparte (`.deb.asc`) con la
+misma clave.
 
 La versión está en `pywk/__init__.py`, y la del RPM en `packaging/py-wk.spec`
 (`rpmdev-bumpspec -n X.Y`).

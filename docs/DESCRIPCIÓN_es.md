@@ -1,4 +1,4 @@
-# py-wk 1.16: descripción
+# py-wk 1.17: descripción
 
 *[Read in English](DESCRIPTION.md)*
 
@@ -36,19 +36,23 @@ Desde la versión 1.2, los enlaces de una entrada funcionan en los tres programa
 
 ### Distribución
 
-El programa se distribuye como un zip (o un clon del repositorio) para cualquier sistema con Python 3.15 o posterior, con tres lanzadores que se enlazan en el `PATH`; como un AppImage para Linux, que lleva su propio Python, y, desde la 1.7, como un paquete RPM para Fedora, en Copr y, firmado, con cada versión publicada, que usa el Python y el Tk del sistema. El Tk del AppImage (8.6) no hace caso de la escala que el escritorio da a los programas X11 (`Xft.dpi`), y en una pantalla de alta resolución escalada su ventana salía muy pequeña; desde la 1.7 la ventana lee esa escala por su cuenta. El zip y el AppImage llevan el commit del que se hicieron, que muestran `--version` y *About*.
+El programa se distribuye como un zip (o un clon del repositorio) para cualquier sistema con Python 3.15 o posterior, con tres lanzadores que se enlazan en el `PATH`; como un AppImage para Linux, que lleva su propio Python, y, desde la 1.7, como un paquete RPM para Fedora, en Copr y, firmado, con cada versión publicada, que usa el Python y el Tk del sistema, y, desde la 1.17, como un `.deb` para Debian y Ubuntu, que instala lo mismo. El zip y el AppImage llevan el commit del que se hicieron, que muestran `--version` y *About*.
 
-Los guiones de `tools/` generan el zip y el AppImage, publican las versiones, toman las capturas de pantalla del README y vuelven a generar todos los iconos a partir de un único SVG. El código se gestiona con git, en un solo repositorio publicado en GitHub y en Codeberg. `tools/release.py` publica cada versión en los dos sitios, con el zip, el AppImage y el RPM firmado, que `packaging/` genera y que se envía también a Copr.
+Los guiones de `tools/` generan el zip y el AppImage, publican las versiones, toman las capturas del README y regeneran los iconos a partir de un único SVG. `tools/release.py` publica cada versión en GitHub y en Codeberg, con el zip, el AppImage y el `.deb` y el RPM firmados (que genera `packaging/`); el RPM va también a Copr.
+
+### El paquete .deb
+
+En Fedora, donde se hace todo, no hay `dpkg-deb`. Como un `.deb` no es más que un archivo `ar` con una línea de versión y dos tar comprimidos, `packaging/build-deb.py` lo escribe con la biblioteca estándar, con los archivos que conoce git, el `copyright` y el registro de cambios que pide Debian; compila los módulos al instalar y los borra al desinstalar. La firma va aparte (`.deb.asc`), con la clave del RPM.
 
 ## Validación
 
-El programa se probó con Python 3.15, la versión mínima, en Linux. `tools/screenshots.py` maneja los tres programas como lo haría un usuario (la ventana en modo claro y oscuro), con ajustes y caché propios, para no tocar los del usuario; de ahí salen las capturas del README, que se revisaron a ojo y se volvieron a tomar en la 1.6. Con un Python demasiado viejo, el programa da un mensaje claro en lugar de un error. Todavía no tiene pruebas automáticas.
+El programa se probó con Python 3.15, la versión mínima, en Linux. `tools/screenshots.py` maneja los tres programas como lo haría un usuario (la ventana en modo claro y oscuro), con ajustes y caché propios, para no tocar los del usuario; de ahí salen las capturas del README, que se revisaron a ojo y se volvieron a tomar en la 1.6. Con un Python demasiado viejo, el programa da un mensaje claro en lugar de un error. El `.deb` se comprobó en un contenedor de Debian inestable: `dpkg` lo lee y lo instala (forzando la dependencia de Python), los enlaces de `/usr/bin` llevan a los lanzadores, los módulos quedan compilados, el lanzador da su mensaje sobre el Python viejo y el paquete se quita sin dejar nada; lintian solo da avisos menores, como la falta de páginas de manual. Todavía no tiene pruebas automáticas.
 
 ## Plataforma
 
-Funciona en Linux, Windows y macOS, y usa las carpetas habituales de ajustes y de caché de cada sistema. Necesita Python 3.15 o superior; para la ventana hace falta Tkinter, que viene en los instaladores de python.org y que en algunas distribuciones de Linux es un paquete aparte, como `python3-tkinter` o `python3-tk`. El AppImage para Linux no necesita nada más.
+Funciona en Linux, Windows y macOS, y usa las carpetas habituales de ajustes y de caché de cada sistema. Necesita Python 3.15 o superior; para la ventana hace falta Tkinter, que viene en los instaladores de python.org y que en algunas distribuciones de Linux es un paquete aparte, como `python3-tkinter` o `python3-tk`. El AppImage para Linux no necesita nada más. El RPM es para Fedora 45 o posterior; el `.deb`, para un Debian o un Ubuntu cuyo `python3` sea 3.15 o posterior.
 
-En pantallas de alta resolución, la ventana sigue la escala del escritorio (`Xft.dpi`). Desde la 1.14 lo hace también cuando la configuración de fontconfig fija otra resolución para las fuentes, como 96 DPI, que dejaba el texto del RPM a la mitad de su tamaño en una pantalla al 200 %; el tamaño de la ventana se guarda en píxeles a 96 DPI y se escala al abrirla.
+En pantallas de alta resolución, la ventana sigue la escala del escritorio (`Xft.dpi`); desde la 1.7, también con el Tk 8.6 del AppImage, que no la lee y dejaba la ventana muy pequeña. Desde la 1.14 lo hace también cuando la configuración de fontconfig fija otra resolución para las fuentes, como 96 DPI, que dejaba el texto del RPM a la mitad de su tamaño en una pantalla al 200 %; el tamaño de la ventana se guarda en píxeles a 96 DPI y se escala al abrirla.
 
 Necesita conexión a internet para descargar las páginas, aunque las que ya están en la caché se muestran sin volver a pedirlas.
 

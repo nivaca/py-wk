@@ -4,8 +4,8 @@ Open-source software in py-wk
 py-wk is free software, under the GNU General Public License, version 3
 or later (the file `LICENSE`).  Its own code uses only the standard
 library of Python, so what other software comes with it depends on how it
-is installed: the zip and the RPM bring nothing but the program, and the
-AppImage brings a whole Python.  This list gives each piece of software,
+is installed: the zip, the RPM and the `.deb` bring nothing but the
+program, and the AppImage brings a whole Python.  This list gives each piece of software,
 what it is used for, and its licence (with its SPDX identifier).
 
 The text of the entries is not software: it comes from the English
@@ -17,7 +17,8 @@ What the program uses
 ---------------------
 
 These are needed by every form of py-wk.  With the zip they are the
-user's own; with the RPM, Fedora's; with the AppImage, those inside it.
+user's own; with the RPM, Fedora's; with the `.deb`, Debian's or Ubuntu's;
+with the AppImage, those inside it.
 
 | Software | Used for | Licence |
 |---|---|---|
@@ -81,6 +82,16 @@ which it installs as dependencies:
 | `hicolor-icon-theme` | `GPL-2.0-or-later` |
 
 
+The .deb
+--------
+
+The `.deb` brings only the program too.  It depends on `python3` (3.15 or
+later) and `python3-tk`, and recommends `hicolor-icon-theme`: the same
+software as in Fedora, under the same licences, as Debian or Ubuntu
+packages it.  The licence of py-wk is given in the Debian way, in
+`/usr/share/doc/py-wk/copyright`.
+
+
 Tools used to make it
 ---------------------
 
@@ -93,7 +104,7 @@ what is distributed.
 | appimagetool | making the AppImage | `MIT` |
 | RPM (`rpmbuild`, `rpmsign`), rpmdevtools | building and signing the RPM | `GPL-2.0-or-later` |
 | desktop-file-utils | checking the menu entries in the RPM | `GPL-2.0-or-later` |
-| GnuPG | signing the RPM | `GPL-3.0-or-later` (with parts under other licences) |
+| GnuPG | signing the RPM and the `.deb` | `GPL-3.0-or-later` (with parts under other licences) |
 | copr-cli | sending the RPM to Copr | `GPL-2.0-or-later` |
 | GitHub CLI (`gh`) | publishing the releases on GitHub | `MIT` |
 | tea | publishing the releases on Codeberg | `MIT` |

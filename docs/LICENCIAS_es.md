@@ -4,7 +4,8 @@ Software libre en py-wk
 py-wk es software libre, bajo la Licencia Pública General de GNU, versión
 3 o posterior (el archivo `LICENSE`). Su código solo usa la biblioteca
 estándar de Python, así que el software que lo acompaña depende de cómo se
-instale: el zip y el RPM no traen más que el programa, y el AppImage trae
+instale: el zip, el RPM y el `.deb` no traen más que el programa, y el
+AppImage trae
 un Python completo. Esta lista da cada pieza de software, para qué se usa
 y su licencia (con su identificador SPDX).
 
@@ -18,7 +19,8 @@ Lo que usa el programa
 ----------------------
 
 Lo necesita cualquier forma de py-wk. Con el zip es el del usuario; con
-el RPM, el de Fedora; con el AppImage, el que va dentro.
+el RPM, el de Fedora; con el `.deb`, el de Debian o Ubuntu; con el AppImage,
+el que va dentro.
 
 | Software | Para qué | Licencia |
 |---|---|---|
@@ -82,6 +84,16 @@ que instala como dependencias:
 | `hicolor-icon-theme` | `GPL-2.0-or-later` |
 
 
+El .deb
+-------
+
+El `.deb` tampoco trae más que el programa. Depende de `python3` (3.15 o
+posterior) y de `python3-tk`, y recomienda `hicolor-icon-theme`: el mismo
+software que en Fedora, con las mismas licencias, tal como lo empaquetan
+Debian o Ubuntu. La licencia de py-wk va a la manera de Debian, en
+`/usr/share/doc/py-wk/copyright`.
+
+
 Herramientas para hacerlo
 -------------------------
 
@@ -94,7 +106,7 @@ distribuye.
 | appimagetool | hacer el AppImage | `MIT` |
 | RPM (`rpmbuild`, `rpmsign`), rpmdevtools | construir y firmar el RPM | `GPL-2.0-or-later` |
 | desktop-file-utils | revisar las entradas de menú del RPM | `GPL-2.0-or-later` |
-| GnuPG | firmar el RPM | `GPL-3.0-or-later` (con partes bajo otras licencias) |
+| GnuPG | firmar el RPM y el `.deb` | `GPL-3.0-or-later` (con partes bajo otras licencias) |
 | copr-cli | enviar el RPM a Copr | `GPL-2.0-or-later` |
 | GitHub CLI (`gh`) | publicar las versiones en GitHub | `MIT` |
 | tea | publicar las versiones en Codeberg | `MIT` |
