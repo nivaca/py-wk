@@ -5,7 +5,7 @@
 # Build with packaging/build-rpm.sh, which makes the source tarball.
 
 Name:           py-wk
-Version:        1.17
+Version:        1.18
 Release:        1%{?dist}
 Summary:        Look up words in the English Wiktionary
 
@@ -102,6 +102,10 @@ PYTHONPATH=%{buildroot}%{_datadir}/%{name} %{python3} -c \
 %{_datadir}/icons/hicolor/*/apps/py-wk.*
 
 %changelog
+* Sun Nov 22 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.18-1
+- Every release signed: each file with its signature, SHA256SUMS and its
+  signature, the public key and a signed tag
+
 * Sat Nov 21 2026 Nicolas Vaughan <nicolasvaughan@proton.me> - 1.17-1
 - A .deb package for Debian and Ubuntu is published with each release
 

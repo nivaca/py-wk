@@ -1,5 +1,13 @@
 # Notas de las versiones
 
+## 1.18
+
+**Cada versión firmada.** Además del RPM, cada archivo publicado (el zip, el AppImage, el
+`.deb`) va ahora con su firma (`.asc`), con `SHA256SUMS` y su firma, y con la clave pública
+(`RPM-GPG-KEY-py-wk`); la etiqueta de la versión también va firmada. Cada firma se comprueba
+con la clave publicada antes de publicar nada, y el README explica cómo comprobar una
+descarga. `tools/release.py` hace ahora siempre el RPM firmado (`--no-rpm` lo omite).
+
 ## 1.17
 
 **Un paquete para Debian y Ubuntu.** Las versiones traen ahora un `.deb`

@@ -11,7 +11,7 @@ The entries keep the names each version had.
 The git history begins with 1.4: versions 1.0 to 1.3 are taken from the
 release notes in `docs/NOTES.md`, which give no dates.
 
-## Unreleased
+## 1.18 — 2026-11-22
 
 - **Every release signed**: besides the RPM, each file published (the
   zip, the AppImage, the `.deb`) comes with its signature (`.asc`), with

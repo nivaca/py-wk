@@ -8,7 +8,7 @@ py-wk is a small program for reading the English Wiktionary
 or an expression in any language, and it shows the whole Wiktionary
 entry, cleanly formatted, in the terminal or in a desktop window.
 Nicolas Vaughan made it in 2026.  It was called *py-wkt* at first and
-*py-wtk* up to 1.15; the current version is 1.17.  Here I explain how it
+*py-wtk* up to 1.15; the current version is 1.18.  Here I explain how it
 was made, in nine stages.
 
 It is meant for people who look up words often: students and teachers

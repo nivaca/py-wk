@@ -10,7 +10,7 @@ Cada entrada conserva el nombre que tenía su versión.
 La historia de git empieza con la 1.4: las versiones 1.0 a 1.3 se toman de
 las notas de versión de `docs/NOTES.md`, que no dan fechas.
 
-## Sin publicar
+## 1.18 — 2026-11-22
 
 - **Cada versión firmada**: además del RPM, cada archivo publicado (el
   zip, la AppImage, el `.deb`) va con su firma (`.asc`), con

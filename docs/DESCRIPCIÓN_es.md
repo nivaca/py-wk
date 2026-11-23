@@ -1,4 +1,4 @@
-# py-wk 1.17: descripción
+# py-wk 1.18: descripción
 
 *[Read in English](DESCRIPTION.md)*
 
