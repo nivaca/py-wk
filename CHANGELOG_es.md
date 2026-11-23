@@ -10,6 +10,17 @@ Cada entrada conserva el nombre que tenía su versión.
 La historia de git empieza con la 1.4: las versiones 1.0 a 1.3 se toman de
 las notas de versión de `docs/NOTES.md`, que no dan fechas.
 
+## Sin publicar
+
+- **Cada versión firmada**: además del RPM, cada archivo publicado (el
+  zip, la AppImage, el `.deb`) va con su firma (`.asc`), con
+  `SHA256SUMS` y su firma, y con la clave pública (`RPM-GPG-KEY-py-wk`);
+  la etiqueta de la versión también va firmada. Cada firma se comprueba
+  con la clave publicada antes de publicar nada. El README explica cómo
+  comprobar una descarga.
+- `tools/release.py` hace ahora siempre el RPM firmado (`--no-rpm` lo
+  omite; `--rpm` se sigue aceptando, y no hace nada).
+
 ## 1.17 — 2026-11-21
 
 - Un paquete `.deb` para Debian, Ubuntu y sus derivadas

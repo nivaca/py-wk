@@ -9,7 +9,7 @@ or an expression in any language, and it shows the whole Wiktionary
 entry, cleanly formatted, in the terminal or in a desktop window.
 Nicolas Vaughan made it in 2026.  It was called *py-wkt* at first and
 *py-wtk* up to 1.15; the current version is 1.17.  Here I explain how it
-was made, in eight stages.
+was made, in nine stages.
 
 It is meant for people who look up words often: students and teachers
 of languages (Latin, Greek, Spanish, English ...), translators,
@@ -235,6 +235,25 @@ install it there.  I preferred an honest dependency to a package that
 installs and then stops with a message; until those systems have Python
 3.15, the AppImage is the way to use py-wk on them.
 
+9. Every release signed
+-----------------------
+
+The RPM and the `.deb` were signed, but the RPM only when the release was
+asked for it, and the zip, the AppImage and the tag went out with nothing
+to show where they came from.  Now the RPM is always made, and a release
+signs everything with the same key: a detached signature for each file
+(the `.deb` too, so its signature is made in the same place as the
+others), a list of their SHA-256 sums with its own signature, and the
+tag, signed by git.  The public key goes with every release, not only
+with the RPM.  A signature nobody checks proves little, so
+`tools/sign_release.py` checks each one before publishing, the way a user
+would, in a keyring of its own that holds only the public key published
+with the files; the build of the RPM already did the same for the RPM.
+A file changed after signing, or a published key that is not the one
+that signed, stops the release.  These were the first automated tests of
+py-wk, and they sign with a key made for them, in a folder of their own,
+never with mine.
+
 Testing
 -------
 
@@ -248,7 +267,12 @@ reads and installs it (forcing the Python dependency), the links in
 `/usr/bin` lead to the launchers, the modules are compiled, the launcher
 gives its message about the old Python, and the package is removed
 without leaving anything; lintian finds only minor warnings (no manual
-pages, for instance).  There are no automated tests yet.
+pages, for instance).  There are three automated tests (`python3 -m
+pytest`), for the signing of a release: every file and `SHA256SUMS` are
+signed and verify with only the published key, a file changed after it
+was signed does not, nor does a signature checked with another key, and a
+missing file is reported.  They use a key made in the test, never the
+author's.
 
 For installation and full usage instructions, see the
 [README](../README.md); the changes of each version are in

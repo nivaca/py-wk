@@ -123,6 +123,26 @@ sudo apt install ./py-wk_*_all.deb
 Or build it from the folder of the program, in any Linux (it needs only Python and git):
 `python3 packaging/build-deb.py` writes it into `build/deb/` and copies it to `dist/`.
 
+**Checking a download.** Each release has these files besides the packages:
+
+```
+FILE.asc                     the signature of each file (zip, AppImage, .deb, RPM)
+SHA256SUMS, SHA256SUMS.asc   the checksums, and their signature
+RPM-GPG-KEY-py-wk            the key that signs them all
+```
+
+Every file, and the tag of the version, is signed with the same key. To check a download,
+import the key once, then check the file's signature and its checksum:
+
+```sh
+gpg --import RPM-GPG-KEY-py-wk
+gpg --verify py-wk-v.VERSION.zip.asc py-wk-v.VERSION.zip
+gpg --verify SHA256SUMS.asc SHA256SUMS && sha256sum -c --ignore-missing SHA256SUMS
+```
+
+The RPM carries its signature inside too (`rpm -K` checks it, after `sudo rpm --import
+RPM-GPG-KEY-py-wk`). The tag can be checked in a clone with `git tag -v vVERSION`.
+
 **With your own Python** (any system): download the zip of the latest release
 (`py-wk-v.VERSION.zip`), or clone the repository, put the folder wherever you want, and
 make links to the three launchers in a directory that is in your `PATH`:
@@ -408,7 +428,7 @@ make the icons. They are not in the bundles.
 |----------------------------|----------------------------------------------------------------|
 | `tools/bundle-zip.py`      | makes `dist/py-wk-v.VERSION.zip`: the program, the icons and the documents, without hidden files, `__pycache__` or the tools, with a `COMMIT` file (shown by `--version` and *About*). `--list` only lists the files. |
 | `tools/bundle-appimage.py` | makes `dist/py-wk-v.VERSION-x86_64.AppImage`, with a Python of its own (from [python-appimage](https://github.com/niess/python-appimage)) and the program as in the zip. The first time it downloads that Python and [appimagetool](https://github.com/AppImage/appimagetool) into `~/.cache/py-wk-build`; `--python` and `--appimagetool` give them instead. |
-| `tools/release.py`         | publishes the tag `vVERSION` on GitHub (`gh`) and Codeberg (`tea`) with the zip, the AppImage and the signed `.deb` (`--no-deb` leaves it out): it makes them, tags, pushes and makes or updates the releases. With `--rpm`, also the signed RPM and its key, and it sends the RPM to Copr (`copr-cli`; `--no-copr` does not). It shows the commands and asks first; `--dry-run` only shows them. See `--help`. |
+| `tools/release.py`         | publishes the tag `vVERSION` on GitHub (`gh`) and Codeberg (`tea`) with the zip, the AppImage, the `.deb` (`--no-deb` leaves it out) and the signed RPM (`--no-rpm` leaves it out), which it also sends to Copr (`copr-cli`; `--no-copr` does not): it makes them, signs each one (`tools/sign_release.py`: `FILE.asc`, `SHA256SUMS` and its signature, each checked with only the published key), makes a signed tag, pushes and makes or updates the releases, with the public key. It shows the commands and asks first; `--dry-run` only shows them. See `--help`. |
 | `tools/screenshots.py`     | takes the screenshots of the three programs into `docs/img/` (the window light and dark), with settings and cache of its own, so yours are not touched. It needs tmux, ImageMagick, Chrome or Chromium, and Xvfb or a display. |
 | `tools/icons.py`           | makes all the icons again from `icons/py-wk.svg`: the PNGs, the Linux, macOS and Windows icons. Each size is drawn by Inkscape (also as a Flatpak) from the SVG; the `.icns` and the `.ico` are put together with Pillow. `--dry-run` only shows how Inkscape would be run. |
 

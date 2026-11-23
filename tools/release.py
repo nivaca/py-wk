@@ -3,36 +3,45 @@
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wk. See the LICENSE file for details.
 """Publishes a release of py-wk on GitHub (with gh) and on Codeberg (with
-tea): the tag vVERSION (the version of pywk/__init__.py), with the zip, the
-AppImage and the signed .deb attached, and (--rpm) the RPM, also published on
-Copr.
+tea): the tag vVERSION (the version of pywk/__init__.py), signed, with the
+zip, the AppImage, the .deb and the signed RPM attached (the RPM also
+published on Copr), each with its signature (FILE.asc), with SHA256SUMS and
+its signature, and with the public key that checks them all.
+
+Everything is signed with the project's key (SIGNING_KEY of
+packaging/build-rpm.sh), and every signature is checked, against the public
+key published, before anything is published.
 
     python3 tools/release.py [--redo] [--notes TEXT | --notes-file FILE]
                              [--no-build] [--no-appimage] [--no-deb]
-                             [--rpm [--no-copr]]
+                             [--no-rpm | --no-copr]
                              [--only github|codeberg] [--dry-run] [--yes]
 
 In order, each step only if it is needed:
 
 1. checks that the repository is on main, with nothing left to commit,
-   that gh and tea are installed, and that the signing key (of the .deb and
-   of the RPM) is in this machine's gpg keyring;
+   that the tools are installed (gh, tea, gpg; unless --no-rpm, rpmbuild
+   and copr-cli), and that the signing key is in this machine's gpg
+   keyring;
 2. makes the zip and the AppImage in dist/ (tools/bundle-zip.py and
    tools/bundle-appimage.py), unless --no-build (then those in dist/ are used);
-   also the .deb, with its detached signature (.deb.asc), in dist/
-   (packaging/build-deb.py --sign), unless --no-deb; with --rpm, also the
-   signed RPM and its public key in build/rpm/ (packaging/build-rpm.sh
-   --sign).  gpg asks for the passphrase;
-3. tags HEAD as vVERSION.  If the tag is there already on another commit,
-   it stops, unless --redo moves it;
+   also the .deb in dist/ (packaging/build-deb.py), unless --no-deb; unless
+   --no-rpm, also the signed RPM in build/rpm/ (packaging/build-rpm.sh
+   --sign, which checks its signature).  Then it signs every file
+   (tools/sign_release.py: FILE.asc, dist/SHA256SUMS and its .asc), and
+   checks each signature with only the public key that is published
+   (packaging/RPM-GPG-KEY-py-wk).  gpg asks for the passphrase;
+3. tags HEAD as vVERSION, a tag signed with the same key (git tag --sign),
+   and checks it (git tag --verify).  If the tag is there already on
+   another commit, it stops, unless --redo moves it;
 4. pushes main and the tag to the remote (origin, whose push addresses are
    GitHub and Codeberg; --redo pushes the tag with --force).  Whether each
    forge has the tag already is asked of each push address, as the remote
    may have no address to fetch from;
 5. on each forge, makes the release of the tag, or keeps the one there is,
    and attaches the files to it, replacing those of the same name;
-6. with --rpm, sends the source RPM to Copr (copr-cli build, project
-   nivaca/py-wk), unless --no-copr.  Copr builds it for each Fedora of
+6. unless --no-rpm or --no-copr, sends the source RPM to Copr (copr-cli build, project
+   nivaca/py-wk).  Copr builds it for each Fedora of
    the project and signs it with its own key; each build needs a higher
    version-release than the last, so the spec must have been bumped
    (rpmdev-bumpspec, see packaging/COPR.org).
@@ -64,16 +73,19 @@ from pywk.version import NAME, VERSION  # noqa: E402
 TAG = f"v{VERSION}"
 ZIP = os.path.join("dist", f"{NAME}-v.{VERSION}.zip")
 APPIMAGE = os.path.join("dist", f"{NAME}-v.{VERSION}-x86_64.AppImage")
-#  El .deb que hace packaging/build-deb.py (su REVISION es la 1) y su firma
+#  El .deb que hace packaging/build-deb.py (su REVISION es la 1); su firma,
+#  .deb.asc, la hace tools/sign_release.py con las de los demás archivos
 DEB = os.path.join("dist", f"{NAME}_{VERSION}-1_all.deb")
-DEB_SIGNATURE = DEB + ".asc"
 BRANCH = "main"
 #  Where tea runs: outside the repository, as tea reads the remote's fetch
 #  address there (which origin may not have) even when --repo is given
 TEA_CWD = tempfile.gettempdir()
 FORGES = {"github": "github.com", "codeberg": "codeberg.org"}
 SPEC = os.path.join("packaging", f"{NAME}.spec")
-RPM_KEY = os.path.join("build", "rpm", f"RPM-GPG-KEY-{NAME}")
+#  The public key published with every release (and the one every
+#  signature is checked against)
+PUBLIC_KEY = os.path.join("packaging", f"RPM-GPG-KEY-{NAME}")
+SUMS = os.path.join("dist", "SHA256SUMS")
 COPR_PROJECT = NAME             # (of the copr-cli user, nivaca)
 
 
@@ -155,17 +167,21 @@ class Release:
     def check(self):
         tools = ("git",) + tuple(t for t, f in (("gh", "github"), ("tea", "codeberg"))
                                  if f in self.forges)
+        tools += ("gpg",)
         if self.args.rpm:
             tools += ("rpmbuild",) + (() if self.args.no_copr else ("copr-cli",))
         for tool in tools:
             if not shutil.which(tool):
                 sys.exit(f"release.py: {tool} is not installed")
-        if self.args.rpm or DEB in self.files:
-            key = signing_key()
-            if not key or subprocess.run(["gpg", "--batch", "--list-secret-keys", key],
-                                         capture_output=True).returncode != 0:
-                sys.exit(f"release.py: the signing key {key or '(none)'} is not in this "
-                         "machine's gpg keyring; import it first (see packaging/COPR.org)")
+        #  Todo se firma, siempre: sin la clave no hay versión
+        key = signing_key()
+        if not key or subprocess.run(["gpg", "--batch", "--list-secret-keys", key],
+                                     capture_output=True).returncode != 0:
+            sys.exit(f"release.py: the signing key {key or '(none)'} is not in this "
+                     "machine's gpg keyring; import it first (see packaging/COPR.org)")
+        if not os.path.isfile(os.path.join(ROOT, PUBLIC_KEY)):
+            sys.exit(f"release.py: there is no {PUBLIC_KEY}, the public key published "
+                     "with the release")
         self.read("git", "rev-parse", "--git-dir")      # (stops if not a repository)
         branch = self.read("git", "rev-parse", "--abbrev-ref", "HEAD")
         if branch != BRANCH:
@@ -205,10 +221,21 @@ class Release:
         if APPIMAGE in self.files:
             self.plan("Make the AppImage", sys.executable, "tools/bundle-appimage.py")
         if DEB in self.files:
-            self.plan("Make the signed .deb", sys.executable, "packaging/build-deb.py",
-                      "--sign")
-        if RPM_KEY in self.files:
+            #  (sin --sign: su firma la hace sign(), con las de los demás)
+            self.plan("Make the .deb", sys.executable, "packaging/build-deb.py")
+        if self.args.rpm:
             self.plan("Make the signed RPM", "packaging/build-rpm.sh", "--sign")
+
+    def sign(self):
+        """Every file published signed (FILE.asc), with SHA256SUMS and its
+        signature, and each signature checked with only the public key
+        published."""
+        signed = [f for f in self.files if f != PUBLIC_KEY]
+        self.plan("Sign the files, and check each signature with the published key",
+                  sys.executable, "tools/sign_release.py", "--key", signing_key(),
+                  "--public", PUBLIC_KEY, "--sums", SUMS, *signed)
+        self.files = (signed + [f"{f}.asc" for f in signed]
+                      + [SUMS, f"{SUMS}.asc", PUBLIC_KEY])
 
     def tag(self, repos: dict):
         head = self.read("git", "rev-parse", "HEAD")
@@ -221,8 +248,10 @@ class Release:
                      f"HEAD ({head[:7]}); --redo moves it (and replaces the files "
                      "of the releases)")
         else:
-            self.plan("Move the tag to HEAD" if tagged else "Tag HEAD",
-                      "git", "tag", "--force", "--annotate", TAG, "--message", TAG)
+            self.plan("Move the tag to HEAD, signed" if tagged else "Tag HEAD, signed",
+                      "git", "tag", "--force", "--sign", "--local-user", signing_key(),
+                      TAG, "--message", TAG)
+            self.plan("Check the signature of the tag", "git", "tag", "--verify", TAG)
         self.plan(f"Push {BRANCH}", "git", "push", self.args.remote, BRANCH)
         #  With --redo the tag is always pushed with --force (to all the
         #  push addresses of the remote)
@@ -316,12 +345,15 @@ class Release:
         self.forges = [args.only] if args.only else ["github", "codeberg"]
         self.files = [ZIP] + ([] if args.no_appimage else [APPIMAGE])
         if not args.no_deb:
-            self.files += [DEB, DEB_SIGNATURE]
+            self.files += [DEB]
+        args.rpm = not args.no_rpm      # (the signed RPM, always, unless --no-rpm)
         if args.rpm:
-            self.files += [rpm(), RPM_KEY]
+            self.files += [rpm()]
+        self.files += [PUBLIC_KEY]
         self.check()
         repos = self.repos()
         self.build()
+        self.sign()
         self.tag(repos)
         for forge in self.forges:
             getattr(self, forge)(repos[forge][0])
@@ -334,7 +366,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="tools/release.py",
         description=f"Publish {TAG} on GitHub and Codeberg, with the zip, the AppImage, "
-                    "the .deb and (--rpm) the RPM, which goes to Copr too.")
+                    "the .deb and the RPM (which goes to Copr too), all signed.")
     parser.add_argument("--redo", action="store_true",
                         help=f"move {TAG} to HEAD if it is on another commit (here and "
                              "on the forges), and replace the files of the releases")
@@ -346,12 +378,14 @@ def main(argv=None):
                         help="use the files in dist/ (and build/rpm/), without making them again")
     parser.add_argument("--no-appimage", action="store_true", help="without the AppImage")
     parser.add_argument("--no-deb", action="store_true",
-                        help="without the .deb (packaging/build-deb.py --sign)")
+                        help="without the .deb (packaging/build-deb.py)")
     parser.add_argument("--rpm", action="store_true",
-                        help="also the signed RPM and its public key "
-                             "(packaging/build-rpm.sh --sign), and a Copr build of it")
+                        help="(the signed RPM, and a Copr build of it, are made always "
+                             "now: kept for older scripts)")
+    parser.add_argument("--no-rpm", action="store_true",
+                        help="without the RPM (nor its Copr build)")
     parser.add_argument("--no-copr", action="store_true",
-                        help="with --rpm, do not send it to Copr")
+                        help="do not send the RPM to Copr")
     parser.add_argument("--only", choices=("github", "codeberg"),
                         help="publish on one forge only")
     parser.add_argument("--remote", default="origin",

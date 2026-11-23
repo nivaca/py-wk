@@ -46,7 +46,7 @@ En Fedora, donde se hace todo, no hay `dpkg-deb`. Como un `.deb` no es más que 
 
 ## Validación
 
-El programa se probó con Python 3.15, la versión mínima, en Linux. `tools/screenshots.py` maneja los tres programas como lo haría un usuario (la ventana en modo claro y oscuro), con ajustes y caché propios, para no tocar los del usuario; de ahí salen las capturas del README, que se revisaron a ojo y se volvieron a tomar en la 1.6. Con un Python demasiado viejo, el programa da un mensaje claro en lugar de un error. El `.deb` se comprobó en un contenedor de Debian inestable: `dpkg` lo lee y lo instala (forzando la dependencia de Python), los enlaces de `/usr/bin` llevan a los lanzadores, los módulos quedan compilados, el lanzador da su mensaje sobre el Python viejo y el paquete se quita sin dejar nada; lintian solo da avisos menores, como la falta de páginas de manual. Todavía no tiene pruebas automáticas.
+El programa se probó con Python 3.15, la versión mínima, en Linux. `tools/screenshots.py` maneja los tres programas como lo haría un usuario (la ventana en modo claro y oscuro), con ajustes y caché propios, para no tocar los del usuario; de ahí salen las capturas del README, que se revisaron a ojo y se volvieron a tomar en la 1.6. Con un Python demasiado viejo, el programa da un mensaje claro en lugar de un error. El `.deb` se comprobó en un contenedor de Debian inestable: `dpkg` lo lee y lo instala (forzando la dependencia de Python), los enlaces de `/usr/bin` llevan a los lanzadores, los módulos quedan compilados, el lanzador da su mensaje sobre el Python viejo y el paquete se quita sin dejar nada; lintian solo da avisos menores, como la falta de páginas de manual. Tiene tres pruebas automáticas (`python3 -m pytest`), las de la firma de una versión: cada archivo y `SHA256SUMS` se firman y se comprueban con solo la clave publicada, mientras que un archivo cambiado después de firmarlo, o una firma comprobada con otra clave, no pasan, y un archivo que falta se señala. Usan una clave hecha en la prueba, nunca la del autor.
 
 ## Plataforma
 
@@ -58,7 +58,7 @@ Necesita conexión a internet para descargar las páginas, aunque las que ya est
 
 ## Ambiente
 
-Fue desarrollado en Fedora Linux 45 con KDE Plasma, con Python 3.15, y con git, con repositorios en GitHub y Codeberg (`nivaca/py-wk`; las direcciones viejas, `nivaca/py-wtk`, llevan allí). El RPM se publica en Copr, en el proyecto `nivaca/py-wk` (hasta la 1.15, `nivaca/py-wtk`, pues Copr no permite renombrar un proyecto).
+Fue desarrollado en Fedora Linux 45 con KDE Plasma, con Python 3.15, y con git, con repositorios en GitHub y Codeberg (`nivaca/py-wk`; las direcciones viejas, `nivaca/py-wtk`, llevan allí). El RPM se publica en Copr, en el proyecto `nivaca/py-wk` (hasta la 1.15, `nivaca/py-wtk`, pues Copr no permite renombrar un proyecto). Cada versión se firma con la clave del autor: el RPM, cada archivo publicado (con su firma `.asc`), las sumas `SHA256SUMS` y la etiqueta; antes de publicar, `tools/sign_release.py` comprueba cada firma con la clave pública que va con la versión.
 
 Para usarlo no hay que instalar nada: se descarga el AppImage y se ejecuta, o se descomprime el zip y se ejecutan sus lanzadores (`py-wk`, `py-wk-tui`, `py-wk-gui`). Si se quiere, `python3 py-wk-install.py` añade accesos al menú de aplicaciones, con su icono y sin permisos de administrador. Los ajustes quedan en la carpeta de configuración del usuario (`~/.config/py-wk/config.toml` en Linux) y la caché en su carpeta de caché (`~/.cache/py-wk` en Linux).
 

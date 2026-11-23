@@ -11,6 +11,17 @@ The entries keep the names each version had.
 The git history begins with 1.4: versions 1.0 to 1.3 are taken from the
 release notes in `docs/NOTES.md`, which give no dates.
 
+## Unreleased
+
+- **Every release signed**: besides the RPM, each file published (the
+  zip, the AppImage, the `.deb`) comes with its signature (`.asc`), with
+  `SHA256SUMS` and its signature, and with the public key
+  (`RPM-GPG-KEY-py-wk`); the tag of the version is signed too. Each
+  signature is checked with the published key before anything is
+  published. The README says how to check a download.
+- `tools/release.py` always makes the signed RPM now (`--no-rpm` leaves
+  it out; `--rpm` is still accepted, and does nothing).
+
 ## 1.17 — 2026-11-21
 
 - A `.deb` package for Debian, Ubuntu and their derivatives

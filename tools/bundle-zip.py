@@ -10,8 +10,8 @@ folder), with the program in a folder of the same name.  It has the three
 launchers, the pywk package, the icons, the documents and the licence, but
 no hidden files or folders (.git ...), none of what is made while the
 program runs or is edited (__pycache__, .bak and .tmp files ...), and none
-of what is in its folder but not part of it (the bundles in dist/, and
-tools/, with the scripts that make them and publish them).  The launchers keep their
+of what is in its folder but not part of it (the bundles in dist/,
+tools/, with the scripts that make them and publish them, and tests/).  The launchers keep their
 permission to run.  It also has COMMIT, the commit it was made from (for
 --version and "About").
 """
@@ -42,8 +42,9 @@ LEFT_OUT = ("__pycache__", "*.pyc", "*.bak", "*.tmp", "*.old", "*~",
             f"{NAME}-v*.zip", "*.AppImage", COMMIT_FILE)
 #  What is in the program's folder but not part of it: the bundles, and
 #  the tools that make them, publish releases and make the screenshots and
-#  icons (not needed to run the program), and the RPM made in build/
-NOT_PART = ("dist", "tools", "build")
+#  icons (not needed to run the program), their tests, and the RPM made
+#  in build/
+NOT_PART = ("dist", "tools", "tests", "build")
 
 
 def name() -> str:
