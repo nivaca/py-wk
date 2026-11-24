@@ -44,7 +44,10 @@ In order, each step only if it is needed:
    nivaca/py-wk).  Copr builds it for each Fedora of
    the project and signs it with its own key; each build needs a higher
    version-release than the last, so the spec must have been bumped
-   (rpmdev-bumpspec, see packaging/COPR.org).
+   (rpmdev-bumpspec, see packaging/COPR.org);
+7. unless --no-apt or --no-deb, adds the Debian package to the APT repository
+   of these programs, github.com/nivaca/apt, with its tool
+   (../apt/tools/apt_repo.py: the index signed and checked).
 
 Before doing anything, it shows the commands it will run and asks; --yes
 does not ask, --dry-run only shows them.  The notes of a new release are
@@ -63,6 +66,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -76,6 +80,8 @@ APPIMAGE = os.path.join("dist", f"{NAME}-v.{VERSION}-x86_64.AppImage")
 #  El .deb que hace packaging/build-deb.py (su REVISION es la 1); su firma,
 #  .deb.asc, la hace tools/sign_release.py con las de los demás archivos
 DEB = os.path.join("dist", f"{NAME}_{VERSION}-1_all.deb")
+# La herramienta del repositorio APT de estos programas: el proyecto apt, junto a este (github.com/nivaca/apt)
+APT_TOOL = Path(__file__).resolve().parent.parent.parent / "apt" / "tools" / "apt_repo.py"
 BRANCH = "main"
 #  Where tea runs: outside the repository, as tea reads the remote's fetch
 #  address there (which origin may not have) even when --repo is given
@@ -340,6 +346,14 @@ class Release:
         return [{re.sub("[^a-z]", "", k.lower()): v for k, v in r.items()} for r in rows]
 
     # ---- all ------------------------------------------------------------ #
+    def apt(self):
+        """The Debian package added to the APT repository of these programs (github.com/nivaca/apt), by its own
+        tool, which keeps only the newest version, signs the index and checks it before uploading."""
+        if not APT_TOOL.is_file():
+            sys.exit(f"release.py: {APT_TOOL} is not there (clone github.com/nivaca/apt beside this project, "
+                     "or use --no-apt)")
+        self.plan("APT: add the Debian package to github.com/nivaca/apt", sys.executable, str(APT_TOOL), "add", DEB)
+
     def __call__(self):
         args = self.args
         self.forges = [args.only] if args.only else ["github", "codeberg"]
@@ -359,6 +373,8 @@ class Release:
             getattr(self, forge)(repos[forge][0])
         if args.rpm and not args.no_copr:
             self.copr()
+        if not args.no_deb and not args.no_apt:
+            self.apt()
         self.run_plan()
 
 
@@ -386,6 +402,8 @@ def main(argv=None):
                         help="without the RPM (nor its Copr build)")
     parser.add_argument("--no-copr", action="store_true",
                         help="do not send the RPM to Copr")
+    parser.add_argument("--no-apt", action="store_true",
+                        help="don't add the Debian package to the APT repository (github.com/nivaca/apt)")
     parser.add_argument("--only", choices=("github", "codeberg"),
                         help="publish on one forge only")
     parser.add_argument("--remote", default="origin",

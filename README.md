@@ -120,6 +120,16 @@ gpg --verify py-wk_*_all.deb.asc py-wk_*_all.deb
 sudo apt install ./py-wk_*_all.deb
 ```
 
+Or add, once, the APT repository of my programs
+([github.com/nivaca/apt](https://github.com/nivaca/apt)), signed with the
+same key; then `apt upgrade` brings each new version:
+
+    $ sudo curl -fsSLo /usr/share/keyrings/nivaca-archive-keyring.gpg \
+        https://github.com/nivaca/apt/releases/download/stable/nivaca-archive-keyring.gpg
+    $ echo "deb [signed-by=/usr/share/keyrings/nivaca-archive-keyring.gpg] https://github.com/nivaca/apt/releases/download/stable ./" \
+        | sudo tee /etc/apt/sources.list.d/nivaca.list
+    $ sudo apt update && sudo apt install py-wk
+
 Or build it from the folder of the program, in any Linux (it needs only Python and git):
 `python3 packaging/build-deb.py` writes it into `build/deb/` and copies it to `dist/`.
 
