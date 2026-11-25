@@ -1,0 +1,20 @@
+{
+  "title": "py-wk",
+  "upload_type": "software",
+  "description": "<p>Look up words in the English Wiktionary.</p>",
+  "creators": [
+    {
+      "name": "Vaughan, Nicolas",
+      "affiliation": "Universidad de los Andes",
+      "orcid": "0000-0002-2877-0539"
+    }
+  ],
+  "license": "gpl-3.0-or-later",
+  "access_right": "open",
+  "keywords": [
+    "Wiktionary",
+    "dictionary",
+    "command line",
+    "terminal"
+  ]
+}
