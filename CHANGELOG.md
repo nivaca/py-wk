@@ -31,6 +31,9 @@ release notes in `docs/NOTES.md`, which give no dates.
   already, and never publishes it. `tools/release.py` now collects the
   deposit after the tag and uploads it as a draft, unless `--no-zenodo`. The
   metadata are in `.zenodo.json`.
+- `tools/zenodo.py`: the description of the deposit leaves out the line
+  that points to the README in other languages and the Screenshots section,
+  whose images Zenodo does not show.
 
 ## 1.18 — 2026-11-22
 
