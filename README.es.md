@@ -132,7 +132,7 @@ misma clave; entonces `apt upgrade` trae cada versión nueva:
     $ sudo apt update && sudo apt install py-wk
 
 O genéralo desde la carpeta del programa, en cualquier Linux (solo necesita Python y git):
-`python3 packaging/build-deb.py` lo escribe en `build/deb/` y lo copia en `dist/`.
+`python3 packaging/build-deb.py` lo escribe en `build/deb/` y lo copia en `build/release/`.
 
 **Cómo comprobar una descarga.** Cada versión publicada trae, además de los paquetes, estos
 archivos:
@@ -446,9 +446,9 @@ generan los iconos. No van dentro de los paquetes.
 
 | Script                     | Qué hace                                                       |
 |----------------------------|----------------------------------------------------------------|
-| `tools/bundle-zip.py`      | genera `dist/py-wk-v.VERSIÓN.zip`: el programa, los iconos y los documentos, sin archivos ocultos, `__pycache__` ni las herramientas, con un archivo `COMMIT` (que muestran `--version` y *About*). `--list` solo lista los archivos. |
-| `tools/bundle-appimage.py` | genera `dist/py-wk-v.VERSIÓN-x86_64.AppImage`, con un Python propio (de [python-appimage](https://github.com/niess/python-appimage)) y el programa como en el zip. La primera vez descarga ese Python y [appimagetool](https://github.com/AppImage/appimagetool) en `~/.cache/py-wk-build`; `--python` y `--appimagetool` permiten indicarlos. |
-| `tools/release.py`         | publica la etiqueta `vVERSIÓN` en GitHub (`gh`) y Codeberg (`tea`) con el zip, el AppImage, el `.deb` (`--no-deb` lo omite) y el RPM firmado (`--no-rpm` lo omite), que envía también a Copr (`copr-cli`; `--no-copr` lo omite): los genera, firma cada uno (`tools/sign_release.py`: `ARCHIVO.asc`, `SHA256SUMS` y su firma, comprobadas todas con solo la clave publicada), pone una etiqueta firmada, sube y crea o actualiza las versiones, con la clave pública. Muestra antes los comandos y pregunta; `--dry-run` solo los muestra. Véase `--help`. |
+| `tools/bundle-zip.py`      | genera `build/release/py-wk-v.VERSIÓN.zip`: el programa, los iconos y los documentos, sin archivos ocultos, `__pycache__` ni las herramientas, con un archivo `COMMIT` (que muestran `--version` y *About*). `--list` solo lista los archivos. |
+| `tools/bundle-appimage.py` | genera `build/release/py-wk-v.VERSIÓN-x86_64.AppImage`, con un Python propio (de [python-appimage](https://github.com/niess/python-appimage)) y el programa como en el zip. La primera vez descarga ese Python y [appimagetool](https://github.com/AppImage/appimagetool) en `~/.cache/py-wk-build`; `--python` y `--appimagetool` permiten indicarlos. |
+| `tools/release.py`         | publica la etiqueta `vVERSIÓN` en GitHub (`gh`) y Codeberg (`tea`) con el zip, el AppImage, el `.deb` (`--no-deb` lo omite) y el RPM firmado (`--no-rpm` lo omite), que envía también a Copr (`copr-cli`; `--no-copr` lo omite): los genera, firma cada uno (`tools/sign_release.py`: `ARCHIVO.asc`, `SHA256SUMS` y su firma, comprobadas todas con solo la clave publicada), pone una etiqueta firmada, sube y crea o actualiza las versiones, con la clave pública. Todo, salvo el RPM, se hace en `build/release/` (el depósito para Zenodo en `build/zenodo/`), y las dos carpetas se borran al final, una vez publicado: solo se guarda el RPM, en `build/rpm/` y su copia en `dist/`. Muestra antes los comandos y pregunta; `--dry-run` solo los muestra. Véase `--help`. |
 | `tools/screenshots.py`     | toma las capturas de los tres programas en `docs/img/` (la ventana clara y oscura), con ajustes y caché propios, de modo que no toca los tuyos. Necesita tmux, ImageMagick, Chrome o Chromium, y Xvfb o una pantalla. |
 | `tools/icons.py`           | genera de nuevo todos los iconos a partir de `icons/py-wk.svg`: los PNG y los iconos de Linux, macOS y Windows. Cada tamaño lo dibuja Inkscape (también como Flatpak) a partir del SVG; el `.icns` y el `.ico` se montan con Pillow. `--dry-run` solo muestra cómo se ejecutaría Inkscape. |
 
@@ -458,7 +458,7 @@ El RPM lo genera `packaging/build-rpm.sh` a partir de `packaging/py-wk.spec`, en
 Las versiones publicadas van todas firmadas con la clave del autor, de huella
 `8187 0643 CA22 1AF9 0C30 554E BE68 32CD 3599 4948`; hay una copia de la clave pública en `packaging/RPM-GPG-KEY-py-wk`; `packaging/COPR.org` explica cómo se publica en Copr.
 
-El `.deb` lo genera `packaging/build-deb.py`, en `build/deb/` (y lo copia en `dist/`), sin
+El `.deb` lo genera `packaging/build-deb.py`, en `build/deb/` (y lo copia en `build/release/`), sin
 más que la biblioteca estándar de Python, de modo que también se puede hacer en Fedora.
 Instala los mismos archivos que el RPM. `--sign` añade una firma aparte (`.deb.asc`) con la
 misma clave.

@@ -23,12 +23,13 @@ In order, each step only if it is needed:
    that the tools are installed (gh, tea, gpg; unless --no-rpm, rpmbuild
    and copr-cli), and that the signing key is in this machine's gpg
    keyring;
-2. makes the zip and the AppImage in dist/ (tools/bundle-zip.py and
-   tools/bundle-appimage.py), unless --no-build (then those in dist/ are used);
-   also the .deb in dist/ (packaging/build-deb.py), unless --no-deb; unless
-   --no-rpm, also the signed RPM in build/rpm/ (packaging/build-rpm.sh
-   --sign, which checks its signature).  Then it signs every file
-   (tools/sign_release.py: FILE.asc, dist/SHA256SUMS and its .asc), and
+2. makes the zip and the AppImage in build/release/ (tools/bundle-zip.py
+   and tools/bundle-appimage.py), unless --no-build (then those in
+   build/release/ are used); also the .deb in build/release/
+   (packaging/build-deb.py), unless --no-deb; unless --no-rpm, also the
+   signed RPM in build/rpm/ (packaging/build-rpm.sh --sign, which checks
+   its signature).  Then it signs every file (tools/sign_release.py:
+   FILE.asc, build/release/SHA256SUMS and its .asc), and
    checks each signature with only the public key that is published
    (packaging/RPM-GPG-KEY-py-wk).  gpg asks for the passphrase;
 3. tags HEAD as vVERSION, a tag signed with the same key (git tag --sign),
@@ -57,7 +58,11 @@ Codeberg, none); a release that is there keeps its notes.
 The repositories are found from the push addresses of the remote; tea uses
 the login named codeberg unless --tea-login says another.
 
-The deposit for Zenodo is collected in dist/zenodo/ after the tag
+Only the RPM is kept here once the release is done (in build/rpm/, and its
+copy in dist/, which holds nothing else): at the end, build/release/ and
+build/zenodo/ are deleted, since the forges and Zenodo have what they held.
+
+The deposit for Zenodo is collected in build/zenodo/ after the tag
 (tools/zenodo.py collect: the tree of the tag, signed, with SHA256SUMS and
 the public key), and at the end uploaded to Zenodo and published (the token in
 $ZENODO_TOKEN or the keyring), unless --no-zenodo. It is published there, with a new DOI;
@@ -81,11 +86,14 @@ sys.path.insert(0, ROOT)
 from pywk.version import NAME, VERSION  # noqa: E402
 
 TAG = f"v{VERSION}"
-ZIP = os.path.join("dist", f"{NAME}-v.{VERSION}.zip")
-APPIMAGE = os.path.join("dist", f"{NAME}-v.{VERSION}-x86_64.AppImage")
+# Lo que se publica se hace en build/release/, no en dist/: aquí solo se
+# guarda el RPM (en build/rpm/, y su copia en dist/, que no tiene nada más)
+OUT = os.path.join("build", "release")
+ZIP = os.path.join(OUT, f"{NAME}-v.{VERSION}.zip")
+APPIMAGE = os.path.join(OUT, f"{NAME}-v.{VERSION}-x86_64.AppImage")
 #  El .deb que hace packaging/build-deb.py (su REVISION es la 1); su firma,
 #  .deb.asc, la hace tools/sign_release.py con las de los demás archivos
-DEB = os.path.join("dist", f"{NAME}_{VERSION}-1_all.deb")
+DEB = os.path.join(OUT, f"{NAME}_{VERSION}-1_all.deb")
 # La herramienta del repositorio APT de estos programas: el proyecto apt, junto a este (github.com/nivaca/apt)
 APT_TOOL = Path(__file__).resolve().parent.parent.parent / "apt" / "tools" / "apt_repo.py"
 BRANCH = "main"
@@ -97,7 +105,7 @@ SPEC = os.path.join("packaging", f"{NAME}.spec")
 #  The public key published with every release (and the one every
 #  signature is checked against)
 PUBLIC_KEY = os.path.join("packaging", f"RPM-GPG-KEY-{NAME}")
-SUMS = os.path.join("dist", "SHA256SUMS")
+SUMS = os.path.join(OUT, "SHA256SUMS")
 COPR_PROJECT = NAME             # (of the copr-cli user, nivaca)
 
 
@@ -239,9 +247,12 @@ class Release:
                     sys.exit(f"release.py: there is no {f} (leave out --no-build "
                              "to make it)")
             return
-        self.plan("Make the zip", sys.executable, "tools/bundle-zip.py")
+        #  (the tools want the folder made, when given --output)
+        os.makedirs(os.path.join(ROOT, OUT), exist_ok=True)
+        self.plan("Make the zip", sys.executable, "tools/bundle-zip.py", "--output", OUT)
         if APPIMAGE in self.files:
-            self.plan("Make the AppImage", sys.executable, "tools/bundle-appimage.py")
+            self.plan("Make the AppImage", sys.executable, "tools/bundle-appimage.py",
+                      "--output", OUT)
         if DEB in self.files:
             #  (sin --sign: su firma la hace sign(), con las de los demás)
             self.plan("Make the .deb", sys.executable, "packaging/build-deb.py")
@@ -371,13 +382,13 @@ class Release:
         self.plan("APT: add the Debian package to github.com/nivaca/apt", sys.executable, str(APT_TOOL), "add", DEB)
 
     def zenodo_collect(self):
-        """The deposit of the release for Zenodo, in dist/zenodo/ (tools/zenodo.py): the tree of the tag, signed,
+        """The deposit of the release for Zenodo, in build/zenodo/ (tools/zenodo.py): the tree of the tag, signed,
         with SHA256SUMS and the public key, each signature checked with only that key."""
-        self.plan("Zenodo: collect the deposit in dist/zenodo/", sys.executable, "tools/zenodo.py", "collect",
+        self.plan("Zenodo: collect the deposit in build/zenodo/", sys.executable, "tools/zenodo.py", "collect",
                   "--tag", TAG)
 
     def zenodo_upload(self):
-        """Unless --no-zenodo, dist/zenodo/ uploaded to Zenodo and published (with
+        """Unless --no-zenodo, build/zenodo/ uploaded to Zenodo and published (with
         --zenodo-draft, only as a draft, published there by hand)."""
         if self.args.no_zenodo:
             return
@@ -412,7 +423,14 @@ class Release:
         if not args.no_deb and not args.no_apt:
             self.apt()
         self.zenodo_upload()
+        self.clean_up()
         self.run_plan()
+
+    def clean_up(self):
+        """Once all is published: only the RPM stays here (build/rpm/, and
+        its copy in dist/); the rest is on the forges and on Zenodo."""
+        self.plan("Delete what was published from build/ (only the RPM stays)",
+                  "rm", "-rf", OUT, os.path.join("build", "zenodo"))
 
 
 def main(argv=None):
@@ -428,7 +446,8 @@ def main(argv=None):
     notes.add_argument("--notes-file", metavar="FILE",
                        help="the notes of a new release, from FILE")
     parser.add_argument("--no-build", action="store_true",
-                        help="use the files in dist/ (and build/rpm/), without making them again")
+                        help="use the files in build/release/ (and build/rpm/), without making "
+                             "them again")
     parser.add_argument("--no-appimage", action="store_true", help="without the AppImage")
     parser.add_argument("--no-deb", action="store_true",
                         help="without the .deb (packaging/build-deb.py)")
@@ -448,7 +467,7 @@ def main(argv=None):
     parser.add_argument("--tea-login", default="codeberg",
                         help="the login of tea for Codeberg (default: codeberg)")
     parser.add_argument("--no-zenodo", action="store_true",
-                        help="don't upload dist/zenodo/ to Zenodo (by default it is uploaded and "
+                        help="don't upload build/zenodo/ to Zenodo (by default it is uploaded and "
                              "published, with the token in $ZENODO_TOKEN or the keyring)")
     parser.add_argument("--zenodo-draft", action="store_true",
                         help="upload it to Zenodo as a draft, not published")

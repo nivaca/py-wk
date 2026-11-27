@@ -4,13 +4,13 @@
 # This file is part of py-wk. See the LICENSE file for details.
 """Makes a zip of the program, to distribute it: python3 tools/bundle-zip.py
 
-The zip is dist/py-wk-v.VERSION.zip (the version of pywk/__init__.py;
-dist is made in the program's folder if need be, and --output gives another
-folder), with the program in a folder of the same name.  It has the three
+The zip is build/release/py-wk-v.VERSION.zip (the version of
+pywk/__init__.py; build/release is made in the program's folder if need be,
+and --output gives another folder), with the program in a folder of the same name.  It has the three
 launchers, the pywk package, the icons, the documents and the licence, but
 no hidden files or folders (.git ...), none of what is made while the
 program runs or is edited (__pycache__, .bak and .tmp files ...), and none
-of what is in its folder but not part of it (the bundles in dist/,
+of what is in its folder but not part of it (the bundles in build/ and dist/,
 tools/, with the scripts that make them and publish them, and tests/).  The launchers keep their
 permission to run.  It also has COMMIT, the commit it was made from (for
 --version and "About").
@@ -33,8 +33,9 @@ import zipfile  # noqa: E402
 from pywk.version import COMMIT_FILE, NAME, VERSION, commit  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # (above tools/)
-#  Where the zip goes, unless --output says otherwise
-DIST = os.path.join(HERE, "dist")
+#  Adónde va el zip, salvo que --output diga otra cosa (no a dist/, que solo
+#  guarda el RPM)
+DIST = os.path.join(HERE, "build", "release")
 
 #  What is made while the program runs or is edited (as in .gitignore), and
 #  earlier bundles
@@ -96,7 +97,7 @@ def main(argv=None):
         description=f"Make a zip of the program, to distribute it: {name()}.zip, "
                     "without hidden files.")
     parser.add_argument("-o", "--output", metavar="FOLDER", default=None,
-                        help="the folder to write it in (default: dist, in the "
+                        help="the folder to write it in (default: build/release, in the "
                              "program's folder)")
     parser.add_argument("-l", "--list", action="store_true",
                         help="only list the files it would have")

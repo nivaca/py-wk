@@ -5,7 +5,7 @@ __pycache__/
 *.tmp
 *~
 .DS_Store
-# The bundles (tools/bundle-zip.py, tools/bundle-appimage.py)
+# The copy of the newest RPM (packaging/build-rpm.sh); the other packages are made in build/release/
 dist/
 # Written into the bundles only (pywk/version.py reads it)
 /COMMIT

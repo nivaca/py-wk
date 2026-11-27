@@ -3,8 +3,9 @@
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wk. See the LICENSE file for details.
 """Hace el paquete .deb de py-wk (Debian, Ubuntu y derivados) a partir de
-esta copia del repositorio, en build/deb/, y copia el más reciente a dist/,
-junto al zip, el AppImage y el RPM.
+esta copia del repositorio, en build/deb/, y copia el más reciente a
+build/release/, donde tools/release.py hace y firma lo que publica (no a
+dist/, que solo guarda el RPM).
 
     python3 packaging/build-deb.py [--sign[=CLAVE]]
 
@@ -41,11 +42,11 @@ REVISION = "1"                  # la del paquete, no la del programa
 MAINTAINER = "Nicolas Vaughan <nicolasvaughan@proton.me>"
 PREFIX = f"/usr/share/{NAME}"
 OUT = os.path.join(DIR, "build", "deb")
-DIST = os.path.join(DIR, "dist")
+DIST = os.path.join(DIR, "build", "release")
 PROGRAMS = ("py-wk", "py-wk-tui", "py-wk-gui")
 
 HELP = ("Build the .deb package of py-wk (Debian, Ubuntu) into build/deb/, "
-        "and copy it to dist/.")
+        "and copy it to build/release/.")
 
 CONTROL = f"""\
 Package: {NAME}
@@ -263,14 +264,14 @@ def build(sign: str | None) -> str:
                         "--detach-sign", path], check=True)
         made.append(path + ".asc")
         print(f"Signed: {os.path.relpath(path, DIR)}.asc")
-    # The newest .deb also goes into dist/, replacing the older ones there.
+    # El .deb más reciente va también a build/release/, en lugar de los anteriores.
     os.makedirs(DIST, exist_ok=True)
     for old in os.listdir(DIST):
         if old.startswith(f"{NAME}_") and old.endswith((".deb", ".deb.asc")):
             os.remove(os.path.join(DIST, old))
     for f in made:
         shutil.copy2(f, DIST)
-    print("Copied to dist/: " + " ".join(os.path.basename(f) for f in made))
+    print("Copied to build/release/: " + " ".join(os.path.basename(f) for f in made))
     return path
 
 

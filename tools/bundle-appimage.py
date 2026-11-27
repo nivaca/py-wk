@@ -4,9 +4,9 @@
 # This file is part of py-wk. See the LICENSE file for details.
 """Makes an AppImage of the program, for Linux: python3 tools/bundle-appimage.py
 
-The AppImage is dist/py-wk-v.VERSION-x86_64.AppImage (the version of
-pywk/__init__.py; dist is made in the program's folder if need be, and
---output gives another folder).  It holds a Python of its own, with Tk and
+The AppImage is build/release/py-wk-v.VERSION-x86_64.AppImage (the version
+of pywk/__init__.py; build/release is made in the program's folder if need
+be, and --output gives another folder).  It holds a Python of its own, with Tk and
 curses (a relocatable Python of the python-appimage project,
 https://github.com/niess/python-appimage), and the program as bundle-zip.py
 puts it in the zip, so it runs on any Linux of the last ten years or so,
@@ -52,8 +52,9 @@ import urllib.request  # noqa: E402
 from pywk.version import COMMIT_FILE, NAME, VERSION  # noqa: E402
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # (above tools/)
-#  Where the AppImage goes, unless --output says otherwise
-DIST = os.path.join(HERE, "dist")
+#  Where the AppImage goes, unless --output says otherwise (not dist/, which
+#  keeps only the RPM)
+DIST = os.path.join(HERE, "build", "release")
 APP_ID = NAME                   # (also the window's class, gui.WM_CLASS)
 ARCH = "x86_64"
 
@@ -362,7 +363,7 @@ def main(argv=None):
         description=f"Make an AppImage of the program, for Linux: {name()}, "
                     "with a Python of its own.")
     parser.add_argument("-o", "--output", metavar="FOLDER", default=None,
-                        help="the folder to write it in (default: dist, in the "
+                        help="the folder to write it in (default: build/release, in the "
                              "program's folder)")
     parser.add_argument("--python", metavar="APPIMAGE",
                         help="the Python AppImage to use (default: one of "
