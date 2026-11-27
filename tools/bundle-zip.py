@@ -2,18 +2,18 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wk. See the LICENSE file for details.
-"""Makes a zip of the program, to distribute it: python3 tools/bundle-zip.py
+"""Hace un zip del programa, para distribuirlo: python3 tools/bundle-zip.py
 
-The zip is build/release/py-wk-v.VERSION.zip (the version of
-pywk/__init__.py; build/release is made in the program's folder if need be,
-and --output gives another folder), with the program in a folder of the same name.  It has the three
-launchers, the pywk package, the icons, the documents and the licence, but
-no hidden files or folders (.git ...), none of what is made while the
-program runs or is edited (__pycache__, .bak and .tmp files ...), and none
-of what is in its folder but not part of it (the bundles in build/ and dist/,
-tools/, with the scripts that make them and publish them, and tests/).  The launchers keep their
-permission to run.  It also has COMMIT, the commit it was made from (for
---version and "About").
+El zip es build/release/py-wk-v.VERSION.zip (la versión de
+pywk/__init__.py; build/release se crea en la carpeta del programa si hace falta,
+y --output da otra carpeta), con el programa en una carpeta del mismo nombre. Trae los tres
+lanzadores, el paquete pywk, los iconos, los documentos y la licencia, pero
+ningún archivo ni carpeta oculta (.git ...), nada de lo que se genera mientras el
+programa corre o se edita (__pycache__, archivos .bak y .tmp ...) y nada de lo
+que está en su carpeta sin ser parte de él (los paquetes de build/ y dist/,
+tools/, con los scripts que los hacen y los publican, y tests/). Los lanzadores
+conservan el permiso de ejecución. Trae también COMMIT, el commit del que salió
+(para --version y "About").
 """
 
 import os

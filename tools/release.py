@@ -2,71 +2,71 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wk. See the LICENSE file for details.
-"""Publishes a release of py-wk on GitHub (with gh) and on Codeberg (with
-tea): the tag vVERSION (the version of pywk/__init__.py), signed, with the
-zip, the AppImage, the .deb and the signed RPM attached (the RPM also
-published on Copr), each with its signature (FILE.asc), with SHA256SUMS and
-its signature, and with the public key that checks them all.
+"""Publica una versión de py-wk en GitHub (con gh) y en Codeberg (con
+tea): la etiqueta vVERSION (la versión de pywk/__init__.py), firmada, con el
+zip, la AppImage, el .deb y el RPM firmado adjuntos (el RPM también va a
+Copr), cada uno con su firma (FILE.asc), con SHA256SUMS y su firma, y con
+la clave pública que los comprueba todos.
 
-Everything is signed with the project's key (SIGNING_KEY of
-packaging/build-rpm.sh), and every signature is checked, against the public
-key published, before anything is published.
+Todo se firma con la clave del proyecto (SIGNING_KEY de
+packaging/build-rpm.sh), y cada firma se comprueba, con la clave pública que
+se publica, antes de publicar nada.
 
     python3 tools/release.py [--redo] [--notes TEXT | --notes-file FILE]
                              [--no-build] [--no-appimage] [--no-deb]
                              [--no-rpm | --no-copr]
                              [--only github|codeberg] [--dry-run] [--yes]
 
-In order, each step only if it is needed:
+En orden, y cada paso solo si hace falta:
 
-1. checks that the repository is on main, with nothing left to commit,
-   that the tools are installed (gh, tea, gpg; unless --no-rpm, rpmbuild
-   and copr-cli), and that the signing key is in this machine's gpg
-   keyring;
-2. makes the zip and the AppImage in build/release/ (tools/bundle-zip.py
-   and tools/bundle-appimage.py), unless --no-build (then those in
-   build/release/ are used); also the .deb in build/release/
-   (packaging/build-deb.py), unless --no-deb; unless --no-rpm, also the
-   signed RPM in build/rpm/ (packaging/build-rpm.sh --sign, which checks
-   its signature).  Then it signs every file (tools/sign_release.py:
-   FILE.asc, build/release/SHA256SUMS and its .asc), and
-   checks each signature with only the public key that is published
-   (packaging/RPM-GPG-KEY-py-wk).  gpg asks for the passphrase;
-3. tags HEAD as vVERSION, a tag signed with the same key (git tag --sign),
-   and checks it (git tag --verify).  If the tag is there already on
-   another commit, it stops, unless --redo moves it;
-4. pushes main and the tag to the remote (origin, whose push addresses are
-   GitHub and Codeberg; --redo pushes the tag with --force).  Whether each
-   forge has the tag already is asked of each push address, as the remote
-   may have no address to fetch from;
-5. on each forge, makes the release of the tag, or keeps the one there is,
-   and attaches the files to it, replacing those of the same name;
-6. unless --no-rpm or --no-copr, sends the source RPM to Copr (copr-cli build, project
-   nivaca/py-wk).  Copr builds it for each Fedora of
-   the project and signs it with its own key; each build needs a higher
-   version-release than the last, so the spec must have been bumped
-   (rpmdev-bumpspec, see packaging/COPR.org);
-7. unless --no-apt or --no-deb, adds the Debian package to the APT repository
-   of these programs, github.com/nivaca/apt, with its tool
-   (../apt/tools/apt_repo.py: the index signed and checked).
+1. comprueba que el repositorio está en main, sin nada pendiente de commit,
+   que las herramientas están instaladas (gh, tea, gpg; salvo con --no-rpm,
+   rpmbuild y copr-cli) y que la clave de firma está en el llavero de gpg
+   de esta máquina;
+2. hace el zip y la AppImage en build/release/ (tools/bundle-zip.py
+   y tools/bundle-appimage.py), salvo con --no-build (entonces usa los que
+   haya en build/release/); también el .deb en build/release/
+   (packaging/build-deb.py), salvo con --no-deb; salvo con --no-rpm, también
+   el RPM firmado en build/rpm/ (packaging/build-rpm.sh --sign, que comprueba
+   su firma). Luego firma cada archivo (tools/sign_release.py:
+   FILE.asc, build/release/SHA256SUMS y su .asc) y
+   comprueba cada firma solo con la clave pública que se publica
+   (packaging/RPM-GPG-KEY-py-wk). gpg pide la frase de contraseña;
+3. pone en HEAD la etiqueta vVERSION, firmada con la misma clave (git tag --sign),
+   y la comprueba (git tag --verify). Si la etiqueta ya está en otro
+   commit, se detiene, salvo que --redo la mueva;
+4. manda main y la etiqueta al remoto (origin, cuyas direcciones de push son
+   GitHub y Codeberg; --redo manda la etiqueta con --force). Si cada forja
+   tiene ya la etiqueta se le pregunta a cada dirección de push, porque puede
+   que el remoto no tenga ninguna dirección de la que traer (fetch);
+5. en cada forja, crea la versión de la etiqueta, o conserva la que haya,
+   y le adjunta los archivos, que reemplazan a los del mismo nombre;
+6. salvo con --no-rpm o --no-copr, manda el RPM fuente a Copr (copr-cli build, proyecto
+   nivaca/py-wk). Copr lo construye para cada Fedora del proyecto y lo
+   firma con su propia clave; cada construcción necesita una version-release
+   mayor que la anterior, así que hay que haber subido la del spec
+   (rpmdev-bumpspec, véase packaging/COPR.org);
+7. salvo con --no-apt o --no-deb, añade el paquete de Debian al repositorio APT
+   de estos programas, github.com/nivaca/apt, con su herramienta
+   (../apt/tools/apt_repo.py: el índice, firmado y comprobado).
 
-Before doing anything, it shows the commands it will run and asks; --yes
-does not ask, --dry-run only shows them.  The notes of a new release are
---notes, --notes-file, or else made by GitHub from the commits (on
-Codeberg, none); a release that is there keeps its notes.
+Antes de hacer nada, muestra las órdenes que va a correr y pregunta; con --yes
+no pregunta, con --dry-run solo las muestra. Las notas de una versión nueva son
+--notes, --notes-file o, si no, las que hace GitHub con los commits (en
+Codeberg, ninguna); una versión que ya está conserva sus notas.
 
-The repositories are found from the push addresses of the remote; tea uses
-the login named codeberg unless --tea-login says another.
+Los repositorios salen de las direcciones de push del remoto; tea usa el
+login llamado codeberg, salvo que --tea-login diga otro.
 
-Only the RPM is kept here once the release is done (in build/rpm/, and its
-copy in dist/, which holds nothing else): at the end, build/release/ and
-build/zenodo/ are deleted, since the forges and Zenodo have what they held.
+Hecha la publicación, aquí solo queda el RPM (en build/rpm/, y su copia en
+dist/, que no guarda nada más): al final se borran build/release/ y
+build/zenodo/, pues las forjas y Zenodo ya tienen lo que había en ellas.
 
-The deposit for Zenodo is collected in build/zenodo/ after the tag
-(tools/zenodo.py collect: the tree of the tag, signed, with SHA256SUMS and
-the public key), and at the end uploaded to Zenodo and published (the token in
-$ZENODO_TOKEN or the keyring), unless --no-zenodo. It is published there, with a new DOI;
-with --zenodo-draft it is left as a draft, to publish by hand.
+El depósito para Zenodo se reúne en build/zenodo/ después de la etiqueta
+(tools/zenodo.py collect: el árbol de la etiqueta, firmado, con SHA256SUMS y
+la clave pública), y al final se sube a Zenodo y se publica (el token, de
+$ZENODO_TOKEN o del llavero), salvo con --no-zenodo. Allí queda publicado,
+con un DOI nuevo; con --zenodo-draft queda como borrador, para publicarlo a mano.
 """
 
 import argparse

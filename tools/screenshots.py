@@ -2,33 +2,33 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wk. See the LICENSE file for details.
-"""Takes the screenshots of the README: the three programs (the command
-line, the terminal in full screen and the window, the window both light and
-dark), looking up the same word.
+"""Toma las capturas del README: los tres programas (la línea de comandos, la
+terminal a pantalla completa y la ventana, esta en claro y en oscuro), buscando
+la misma palabra.
 
     python3 tools/screenshots.py [-o FOLDER] [--only cli,tui,gui]
                                  [--looks light,dark] [--word rosa]
                                  [--lang la] [--scale 2]
 
-It writes FOLDER/cli.png, FOLDER/tui.png and FOLDER/gui_LOOK.png (by
-default in docs/img/, where the READMEs would take them from), at SCALE
-times the size of the screen (2 by default, sharp on screens of high
-resolution).  Each program runs with settings and a cache of its own, in a
-temporary folder, so the user's settings are not touched (and the pages are
-downloaded afresh):
+Escribe FOLDER/cli.png, FOLDER/tui.png y FOLDER/gui_LOOK.png (si no se da
+otra, en docs/img/, de donde las tomarían los README), a SCALE veces el tamaño
+de la pantalla (2 si no se da otra, nítidas en pantallas de alta resolución).
+Cada programa corre con una configuración y una caché propias, en una carpeta
+temporal, así que la configuración del usuario no se toca (y las páginas se
+descargan de nuevo):
 
-* the window (py-wk-gui); only its own window is captured, with
-  ImageMagick's import, never the screen.  If Xvfb is installed the window
-  is opened there, out of sight and with room for any scale; if not, on the
-  screen, and the scale is made smaller when the window would not fit;
-* the command line (py-wk, brief) and the terminal in full screen
-  (py-wk-tui) in a hidden tmux terminal of a fixed size; what it shows,
-  with its colours, is written as a web page like a terminal, and Chrome
-  (without a window: --headless --screenshot) takes it.
+* la ventana (py-wk-gui); se captura solo su ventana, con import, de
+  ImageMagick, nunca la pantalla. Si Xvfb está instalado, la ventana se abre
+  allí, fuera de la vista y con espacio para cualquier escala; si no, en la
+  pantalla, y la escala se reduce cuando la ventana no cabría;
+* la línea de comandos (py-wk, breve) y la terminal a pantalla completa
+  (py-wk-tui), en una terminal oculta de tmux, de tamaño fijo; lo que muestra,
+  con sus colores, se escribe como una página web que imita una terminal, y
+  Chrome (sin ventana: --headless --screenshot) la captura.
 
-It needs Linux with an X display (XWayland is enough) or Xvfb, ImageMagick,
-tmux and Google Chrome (or Chromium), and a connection to Wiktionary; the
-program itself needs none of them.
+Necesita Linux con una pantalla X (basta XWayland) o Xvfb, ImageMagick,
+tmux y Google Chrome (o Chromium), y conexión con Wiktionary; el programa
+mismo no necesita nada de eso.
 """
 
 import argparse

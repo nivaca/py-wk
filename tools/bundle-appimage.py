@@ -2,30 +2,30 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wk. See the LICENSE file for details.
-"""Makes an AppImage of the program, for Linux: python3 tools/bundle-appimage.py
+"""Hace una AppImage del programa, para Linux: python3 tools/bundle-appimage.py
 
-The AppImage is build/release/py-wk-v.VERSION-x86_64.AppImage (the version
-of pywk/__init__.py; build/release is made in the program's folder if need
-be, and --output gives another folder).  It holds a Python of its own, with Tk and
-curses (a relocatable Python of the python-appimage project,
-https://github.com/niess/python-appimage), and the program as bundle-zip.py
-puts it in the zip, so it runs on any Linux of the last ten years or so,
-without installing anything.
+La AppImage es build/release/py-wk-v.VERSION-x86_64.AppImage (la versión
+de pywk/__init__.py; build/release se crea en la carpeta del programa si hace
+falta, y --output da otra carpeta). Lleva un Python propio, con Tk y curses
+(un Python reubicable del proyecto python-appimage,
+https://github.com/niess/python-appimage), y el programa tal como bundle-zip.py
+lo pone en el zip, de modo que corre en cualquier Linux de los últimos diez
+años, más o menos, sin instalar nada.
 
-It starts the window (py-wk-gui); a first argument chooses another of the
-programs:
+Abre la ventana (py-wk-gui); un primer argumento elige otro de los
+programas:
 
     py-wk.AppImage [gui|cli|tui] ...
 
-and so does the name it is called by, if it is a link named py-wk,
-py-wk-tui or py-wk-gui.  "help" lists them.  The settings and the cache
-are the user's usual ones (~/.config/py-wk, ~/.cache/py-wk), as with the
+y lo mismo hace el nombre con que se la llama, si es un enlace llamado py-wk,
+py-wk-tui o py-wk-gui. "help" los enumera. La configuración y la caché son
+las de siempre del usuario (~/.config/py-wk, ~/.cache/py-wk), como con el
 zip.
 
-What it needs is downloaded the first time, and kept in the user's cache
-folder (~/.cache/py-wk-build): the Python and appimagetool
-(https://github.com/AppImage/appimagetool).  --python and --appimagetool
-give them instead.
+Lo que necesita se descarga la primera vez y se guarda en la carpeta de caché
+del usuario (~/.cache/py-wk-build): el Python y appimagetool
+(https://github.com/AppImage/appimagetool). --python y --appimagetool los
+dan en su lugar.
 """
 
 import os

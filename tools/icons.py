@@ -2,28 +2,28 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Nicolas Vaughan <nicolasvaughan@proton.me>
 # This file is part of py-wk. See the LICENSE file for details.
-"""Makes all the icons afresh from icons/py-wk.svg:
+"""Hace de nuevo todos los iconos a partir de icons/py-wk.svg:
 
     python3 tools/icons.py [--svg FILE] [-o FOLDER] [--dry-run]
 
-In FOLDER (icons/ by default) it writes:
+En FOLDER (icons/, si no se da otra) escribe:
 
-* png/py-wk-N.png, for each N in PNG_SIZES;
-* linux/hicolor/NxN/apps/py-wk.png, for each N in HICOLOR_SIZES, and
-  linux/hicolor/scalable/apps/py-wk.svg (a copy of the SVG);
-* mac/py-wk.iconset/icon_NxN[@2x].png and mac/py-wk.icns;
+* png/py-wk-N.png, para cada N de PNG_SIZES;
+* linux/hicolor/NxN/apps/py-wk.png, para cada N de HICOLOR_SIZES, y
+  linux/hicolor/scalable/apps/py-wk.svg (una copia del SVG);
+* mac/py-wk.iconset/icon_NxN[@2x].png y mac/py-wk.icns;
 * windows/py-wk.ico.
 
-Each size is drawn by Inkscape from the SVG (never scaled down from a
-bigger PNG), all of them in a single run of Inkscape.  The .icns and the
-.ico are put together with Pillow from those same PNGs.
+Inkscape dibuja cada tamaño a partir del SVG (nunca se reduce un PNG más
+grande), todos en una sola ejecución. El .icns y el .ico los arma Pillow con
+esos mismos PNG.
 
-Inkscape may be a Flatpak (org.inkscape.Inkscape), and then it is run with
-"flatpak run" (a wrapper called inkscape on the PATH may not pass on the
-arguments), with absolute paths, and writing only inside FOLDER: a Flatpak
-does not see the host's /tmp.  So the PNGs are first drawn in a hidden
-folder inside FOLDER, and only moved to their places once all are there.
-If there is no Flatpak, the inkscape on the PATH is used.
+Inkscape puede ser un Flatpak (org.inkscape.Inkscape), y entonces se corre con
+"flatpak run" (un envoltorio llamado inkscape en el PATH puede no pasarle los
+argumentos), con rutas absolutas y escribiendo solo dentro de FOLDER: un
+Flatpak no ve el /tmp del sistema. Por eso los PNG se dibujan primero en una
+carpeta oculta dentro de FOLDER y solo pasan a su lugar cuando están todos.
+Si no hay Flatpak, se usa el inkscape del PATH.
 """
 
 import argparse
